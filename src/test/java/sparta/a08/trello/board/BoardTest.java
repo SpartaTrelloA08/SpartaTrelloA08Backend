@@ -1,5 +1,6 @@
 package sparta.a08.trello.board;
 
+import sparta.a08.trello.board.dto.BoardColorRequest;
 import sparta.a08.trello.board.dto.BoardRequest;
 import sparta.a08.trello.board.entity.Board;
 import sparta.a08.trello.board.entity.UserBoard;
@@ -35,5 +36,14 @@ public interface BoardTest extends CommonTest {
             .user(TEST_USER)
             .board(TEST_BOARD)
             .role(UserBoardRole.MEMBER)
+            .build();
+
+    String TEST_COLOR_TYPE_SERVICE = "service";
+    String TEST_COLOR_TYPE_CUSTOM = "custom";
+
+    String TEST_BOARD_COLOR_RED = "board_color_red.png";
+
+    BoardColorRequest TEST_BOARD_COLOR_REQUEST = BoardColorRequest.builder()
+            .filename(TEST_BOARD_COLOR_RED)
             .build();
 }
