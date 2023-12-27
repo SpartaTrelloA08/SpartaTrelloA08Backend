@@ -145,6 +145,20 @@ class BoardServiceTest implements BoardTest {
             //then
             assertEquals(CustomErrorCode.INVALID_COLOR_TYPE_EXCEPTION, exception.getErrorCode());
         }
+    }
 
+    @Test
+    @DisplayName("Board 삭제 테스트")
+    void deleteBoardTest() {
+        //given
+        given(boardRepository.findById(TEST_BOARD_ID)).willReturn(Optional.of(TEST_BOARD));
+        given(userBoardRepository.findById(any(UserBoardPK.class))).willReturn(Optional.of(TEST_USER_BOARD_ADMIN));
+
+        //when
+        BoardResponse response = boardService.deleteBoard(TEST_USER, TEST_BOARD_ID);
+
+        //then
+        assertEquals(TEST_BOARD.getTitle(), response.getTitle());
+        assertEquals(TEST_BOARD.getContent(), response.getContent());
     }
 }
