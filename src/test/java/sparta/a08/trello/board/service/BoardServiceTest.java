@@ -103,5 +103,21 @@ class BoardServiceTest implements BoardTest {
             //then
             assertEquals(CustomErrorCode.NOT_ALLOWED_TO_UPDATE_BOARD_EXCEPTION, exception.getErrorCode());
         }
+
+        @Test
+        @DisplayName("Board 정보 수정 테스트 실패 - 어드민이 아닌 경우")
+        void updateBoard_fail_notAdmin() {
+            //given
+            given(boardRepository.findById(TEST_BOARD_ID)).willReturn(Optional.of(TEST_BOARD));
+            given(userBoardRepository.findById(any(UserBoardPK.class))).willReturn(Optional.of(TEST_USER_BOARD_MEMBER));
+
+            //when
+            CustomException exception = assertThrows(CustomException.class, () ->
+                    boardService.updateBoard(TEST_USER, TEST_BOARD_REQUEST, TEST_BOARD_ID)
+            );
+
+            //then
+            assertEquals(CustomErrorCode.NOT_ALLOWED_TO_UPDATE_BOARD_EXCEPTION, exception.getErrorCode());
+        }
     }
 }
