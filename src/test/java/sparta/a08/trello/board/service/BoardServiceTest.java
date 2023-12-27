@@ -63,7 +63,6 @@ class BoardServiceTest implements BoardTest {
         void updateBoard_success() {
             //given
             given(boardRepository.findById(TEST_BOARD_ID)).willReturn(Optional.of(TEST_BOARD));
-
             given(userBoardRepository.findById(any(UserBoardPK.class))).willReturn(Optional.of(TEST_USER_BOARD_ADMIN));
 
             //when
@@ -81,10 +80,28 @@ class BoardServiceTest implements BoardTest {
             given(boardRepository.findById(TEST_BOARD_ID)).willReturn(Optional.empty());
 
             //when
-            CustomException exception = assertThrows(CustomException.class, () -> boardService.updateBoard(TEST_USER, TEST_BOARD_REQUEST, TEST_BOARD_ID));
+            CustomException exception = assertThrows(CustomException.class, () ->
+                    boardService.updateBoard(TEST_USER, TEST_BOARD_REQUEST, TEST_BOARD_ID)
+            );
 
             //then
             assertEquals(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION, exception.getErrorCode());
+        }
+
+        @Test
+        @DisplayName("Board 정보 수정 테스트 실패 - Board 구성원이 아닌 경우")
+        void updateBoard_fail_notMember() {
+            //given
+            given(boardRepository.findById(TEST_BOARD_ID)).willReturn(Optional.of(TEST_BOARD));
+            given(userBoardRepository.findById(any(UserBoardPK.class))).willReturn(Optional.empty());
+
+            //when
+            CustomException exception = assertThrows(CustomException.class, () ->
+                    boardService.updateBoard(TEST_USER, TEST_BOARD_REQUEST, TEST_BOARD_ID)
+            );
+
+            //then
+            assertEquals(CustomErrorCode.NOT_ALLOWED_TO_UPDATE_BOARD_EXCEPTION, exception.getErrorCode());
         }
     }
 }
