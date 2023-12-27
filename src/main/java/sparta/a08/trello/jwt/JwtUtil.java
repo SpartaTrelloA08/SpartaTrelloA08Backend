@@ -64,7 +64,7 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    public String creatToken(String username) {
+    public String createToken(String username) {
         Date date = new Date();
 
         // 토큰 만료 시간 60분

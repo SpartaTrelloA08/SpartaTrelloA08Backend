@@ -35,6 +35,17 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void login(UserRequestDTO userRequestDTO) {
+        String username = userRequestDTO.getUsername();
+        String password = userRequestDTO.getPassword();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
 
     public boolean isPasswordValid(UserRequestDTO userRequestDTO) {
         return userRequestDTO.getPassword().contains(userRequestDTO.getUsername());
