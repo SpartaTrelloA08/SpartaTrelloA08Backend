@@ -94,6 +94,9 @@ public class BoardServiceImpl implements BoardService {
         return new BoardResponse(findBoard);
     }
 
+
+    /**🔽🔽🔽 PRIVATE 🔽🔽🔽**/
+    //User, Board ManyToMany 관계를 위한 연결 테이블 레코드 생성
     private void createUserBoard(User user, Board board, UserBoardRole role) {
         UserBoard userBoard = UserBoard.builder()
                 .user(user)
