@@ -28,13 +28,13 @@ public class Board extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility", nullable = false)
-    private BoardAccess visibility;
+    private BoardType visibility;
 
     @Builder
     public Board(String title, String content) {
         this.title = title;
         this.content = content;
         this.colorURL = BoardColor.BLACK.getUrl();
-        this.visibility = BoardAccess.PRIVATE;
+        this.visibility = BoardType.PRIVATE;
     }
 }
