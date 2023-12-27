@@ -40,5 +40,5 @@ public interface BoardService {
      * @param boardId Board 삭제 대상 Board
      * @return Board 삭제 결과
      * */
-    Board deleteBoard(User user, Long boardId);
+    BoardResponse deleteBoard(User user, Long boardId);
 }

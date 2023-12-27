@@ -20,11 +20,11 @@ public class Board extends BaseEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content")
     private String content;
 
-    @Column(name = "color", nullable = false)
-    private String colorURL;
+    @Column(name = "imageURL", nullable = false)
+    private String imageURL;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility", nullable = false)
@@ -34,7 +34,13 @@ public class Board extends BaseEntity {
     public Board(String title, String content) {
         this.title = title;
         this.content = content;
-        this.colorURL = BoardColor.BLACK.getUrl();
+        this.imageURL = BoardColor.BLACK.getUrl();
         this.visibility = BoardType.PRIVATE;
+    }
+
+    public Board update(String title, String content) {
+        this.title = title;
+        this.content = content;
+        return this;
     }
 }
