@@ -1,4 +1,4 @@
-package sparta.a08.trello.board.entity;
+package sparta.a08.trello.board.entity.enums;
 
 /**
  * 보드 접근 레벨을 정의하고 있는 Enum class

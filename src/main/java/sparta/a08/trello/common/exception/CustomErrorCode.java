@@ -12,7 +12,8 @@ public enum CustomErrorCode {
 
     //BOARD
     BOARD_NOT_FOUND_EXCEPTION("존재하지 않는 보드입니다."),
-    NOT_ALLOWED_TO_UPDATE_BOARD_EXCEPTION("보드 수정 권한이 없습니다.");
+    NOT_ALLOWED_TO_UPDATE_BOARD_EXCEPTION("보드 수정 권한이 없습니다."),
+    INVALID_COLOR_TYPE_EXCEPTION("유효하지 않은 배경 타입입니다.");
 
     private final String statusMessage;
 }
