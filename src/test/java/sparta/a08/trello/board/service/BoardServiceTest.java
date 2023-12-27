@@ -8,14 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sparta.a08.trello.board.BoardTest;
-import sparta.a08.trello.board.dto.BoardColorResponse;
 import sparta.a08.trello.board.dto.BoardResponse;
-import sparta.a08.trello.board.entity.UserBoard;
 import sparta.a08.trello.board.entity.UserBoardPK;
-import sparta.a08.trello.board.entity.enums.BoardColor;
 import sparta.a08.trello.board.repository.BoardRepository;
 import sparta.a08.trello.board.repository.UserBoardRepository;
-import sparta.a08.trello.common.CommonTest;
 import sparta.a08.trello.common.cloud.s3.S3Util;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
@@ -25,8 +21,6 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-
 
 @ExtendWith(MockitoExtension.class)
 class BoardServiceTest implements BoardTest {
