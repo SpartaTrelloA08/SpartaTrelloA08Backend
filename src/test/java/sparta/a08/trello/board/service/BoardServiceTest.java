@@ -15,6 +15,8 @@ import sparta.a08.trello.board.repository.BoardRepository;
 import sparta.a08.trello.board.repository.UserBoardRepository;
 import sparta.a08.trello.common.CommonTest;
 import sparta.a08.trello.common.cloud.s3.S3Util;
+import sparta.a08.trello.common.exception.CustomErrorCode;
+import sparta.a08.trello.common.exception.CustomException;
 
 import java.util.Optional;
 
@@ -70,6 +72,19 @@ class BoardServiceTest implements BoardTest {
             //then
             assertEquals(TEST_BOARD_REQUEST.getTitle(), response.getTitle());
             assertEquals(TEST_BOARD_REQUEST.getContent(), response.getContent());
+        }
+
+        @Test
+        @DisplayName("Board 정보 수정 테스트 실패 - Board가 존재하지 않는 경우")
+        void updateBoard_fail_notFount() {
+            //given
+            given(boardRepository.findById(TEST_BOARD_ID)).willReturn(Optional.empty());
+
+            //when
+            CustomException exception = assertThrows(CustomException.class, () -> boardService.updateBoard(TEST_USER, TEST_BOARD_REQUEST, TEST_BOARD_ID));
+
+            //then
+            assertEquals(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION, exception.getErrorCode());
         }
     }
 }
