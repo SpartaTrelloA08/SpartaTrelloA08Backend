@@ -1,8 +1,11 @@
-package sparta.a08.trello.user;
+package sparta.a08.trello.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sparta.a08.trello.user.repository.UserRepository;
+import sparta.a08.trello.user.dto.UserRequestDTO;
+import sparta.a08.trello.user.entity.User;
 
 @Service
 @RequiredArgsConstructor

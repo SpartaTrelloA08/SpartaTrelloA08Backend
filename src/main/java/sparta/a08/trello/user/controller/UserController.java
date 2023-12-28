@@ -1,4 +1,4 @@
-package sparta.a08.trello.user;
+package sparta.a08.trello.user.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sparta.a08.trello.CommonResponseDTO;
-import sparta.a08.trello.jwt.JwtUtil;
+import sparta.a08.trello.common.CommonResponseDTO;
+import sparta.a08.trello.common.jwt.JwtUtil;
+import sparta.a08.trello.user.dto.UserRequestDTO;
+import sparta.a08.trello.user.service.UserService;
 
 @RequestMapping("/api/users")
 @RestController

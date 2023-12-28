@@ -1,4 +1,4 @@
-package sparta.a08.trello.user;
+package sparta.a08.trello.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

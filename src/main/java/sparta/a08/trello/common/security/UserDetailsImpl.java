@@ -1,8 +1,9 @@
-package sparta.a08.trello.user;
+package sparta.a08.trello.common.security;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import sparta.a08.trello.user.entity.User;
 
 import java.util.Collection;
 

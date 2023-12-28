@@ -1,7 +1,8 @@
-package sparta.a08.trello.user;
+package sparta.a08.trello.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import sparta.a08.trello.user.entity.User;
 
 import java.util.Optional;
 

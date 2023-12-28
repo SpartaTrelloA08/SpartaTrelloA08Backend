@@ -1,4 +1,4 @@
-package sparta.a08.trello.jwt;
+package sparta.a08.trello.common.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
