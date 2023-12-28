@@ -64,14 +64,14 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    public String createToken(String username) {
+    public String createToken(String email) {
         Date date = new Date();
 
         // 토큰 만료 시간 60분
         long TOKEN_TIME = 60 * 60 * 1000;
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(username)
+                        .setSubject(email)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)

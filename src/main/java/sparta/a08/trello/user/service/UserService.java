@@ -12,7 +12,9 @@ import sparta.a08.trello.user.entity.User;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final PasswordEncoder passwordEncoder;
+
     private final UserRepository userRepository;
 
     public void signup(UserRequestDTO userRequestDTO) {
@@ -41,10 +43,10 @@ public class UserService {
     }
 
     public void login(UserRequestDTO userRequestDTO) {
-        String username = userRequestDTO.getUsername();
+        String email = userRequestDTO.getEmail();
         String password = userRequestDTO.getPassword();
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 401));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
