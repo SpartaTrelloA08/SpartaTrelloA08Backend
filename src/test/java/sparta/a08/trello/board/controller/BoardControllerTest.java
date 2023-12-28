@@ -97,7 +97,26 @@ class BoardControllerTest extends ControllerTest implements BoardTest {
                     .andExpect(jsonPath("$.content").value(TEST_BOARD_REQUEST.getContent()));
         }
 
+        @Test
+        @DisplayName("Board 수정 요청 테스트 실패 - 제목이 없는 경우")
+        void updateBoard_fail_invalidTitle() throws Exception {
+            //given
+            BoardRequest request = BoardRequest.builder()
+                    .title("")
+                    .content("content")
+                    .build();
 
+            //when
+            ResultActions action = mockMvc.perform(patch("/api/board/{boardId}", TEST_BOARD_ID)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)));
+
+            //then
+            action
+                    .andExpect(status().isBadRequest())
+                    .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
+        }
     }
 
 }
