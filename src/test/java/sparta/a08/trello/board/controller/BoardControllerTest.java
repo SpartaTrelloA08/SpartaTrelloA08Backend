@@ -16,8 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -119,4 +118,34 @@ class BoardControllerTest extends ControllerTest implements BoardTest {
         }
     }
 
+    @Test
+    @DisplayName("Board 배경 색상 변경 요청 테스트")
+    void updateBoardColorTest() throws Exception {
+        //given
+
+        //when
+        ResultActions action = mockMvc.perform(put("/api/board/{boardId}/color", TEST_BOARD_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(TEST_BOARD_COLOR_REQUEST))
+                .param("type", TEST_COLOR_TYPE_SERVICE));
+
+        //then
+        action.andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Board 삭제 요청 테스트")
+    void deleteBoardTest() throws Exception {
+        //given
+
+        //when
+        ResultActions action = mockMvc.perform(delete("/api/board/{boardId}", TEST_BOARD_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(TEST_BOARD_COLOR_REQUEST)));
+
+        //then
+        action.andExpect(status().isOk());
+    }
 }
