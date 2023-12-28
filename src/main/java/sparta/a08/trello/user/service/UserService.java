@@ -3,6 +3,7 @@ package sparta.a08.trello.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
 import sparta.a08.trello.user.repository.UserRepository;
@@ -52,6 +53,13 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(CustomErrorCode.PWD_MISMATCH_EXCEPTION, 409);
         }
+    }
+
+    @Transactional
+    public void logoutUser(Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow((() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 401)));
+        findUser.logout();
     }
 
     public boolean isPasswordValid(UserRequestDTO userRequestDTO) {

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import sparta.a08.trello.common.exception.CustomErrorCode;
+import sparta.a08.trello.common.exception.CustomException;
 import sparta.a08.trello.user.entity.User;
 import sparta.a08.trello.user.repository.UserRepository;
 
@@ -13,9 +15,9 @@ public class UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public UserDetails getUserDetails (String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Not Found" + username));
+    public UserDetails getUserDetails (String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 401));
         return new UserDetailsImpl(user);
     }
 }

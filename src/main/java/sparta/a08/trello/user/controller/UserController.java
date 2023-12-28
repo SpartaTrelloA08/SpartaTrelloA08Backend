@@ -5,13 +5,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import sparta.a08.trello.common.CommonResponseDTO;
 import sparta.a08.trello.common.jwt.JwtUtil;
+import sparta.a08.trello.common.security.UserDetailsImpl;
 import sparta.a08.trello.user.dto.UserRequestDTO;
+import sparta.a08.trello.user.entity.User;
 import sparta.a08.trello.user.service.UserService;
 
 @RequestMapping("/api/users")
@@ -41,4 +41,14 @@ public class UserController {
 
         return ResponseEntity.ok().body(new CommonResponseDTO("로그인 성공.", HttpStatus.OK.value()));
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity<CommonResponseDTO> logoutUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        User findUser = userDetails.getUser();
+        userService.logoutUser(findUser.getId());
+
+        return ResponseEntity.ok().body(new CommonResponseDTO("로그아웃 성공", HttpStatus.OK.value()));
+    }
+
 }

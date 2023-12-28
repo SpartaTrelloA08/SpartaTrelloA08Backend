@@ -24,10 +24,16 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private String refreshToken;
+
     @Builder
     public User(String email, String username, String password) {
         this.email = email;
         this.username = username;
         this.password = password;
+    }
+
+    public void logout() {
+        refreshToken = null;
     }
 }
