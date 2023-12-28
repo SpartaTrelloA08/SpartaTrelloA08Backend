@@ -16,12 +16,12 @@ public class UserBoard {
     @EmbeddedId
     private UserBoardPK userBoardPK;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @MapsId("userId")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     @MapsId("boardId")
     private Board board;
