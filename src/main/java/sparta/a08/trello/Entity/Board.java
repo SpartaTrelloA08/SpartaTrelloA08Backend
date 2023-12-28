@@ -1,7 +1,9 @@
-package sparta.a08.trello.user;
+package sparta.a08.trello.Entity;
+
 import jakarta.persistence.*;
+
 @Entity
-public class User {
+public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,4 +1,4 @@
-package sparta.a08.trello.card;
+package sparta.a08.trello.Entity;
 import jakarta.persistence.*;
 
 
