@@ -3,6 +3,8 @@ package sparta.a08.trello.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sparta.a08.trello.common.exception.CustomErrorCode;
+import sparta.a08.trello.common.exception.CustomException;
 import sparta.a08.trello.user.repository.UserRepository;
 import sparta.a08.trello.user.dto.UserRequestDTO;
 import sparta.a08.trello.user.entity.User;
@@ -19,19 +21,19 @@ public class UserService {
         String password = passwordEncoder.encode(userRequestDTO.getPassword());
 
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 이메일 주소입니다.");
+            throw new CustomException(CustomErrorCode.ALREADY_EXIST_EMAIL_EXCEPTION, 409);
         }
 
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new IllegalArgumentException("이미 사용 중인 사용자명입니다.");
+            throw new CustomException(CustomErrorCode.ALREADY_EXIST_USER_NAME_EXCEPTION, 409);
         }
 
         if (isPasswordValid(userRequestDTO)) {
-            throw new IllegalArgumentException("비밀번호는 사용자명을 포함할 수 없습니다.");
+            throw new CustomException(CustomErrorCode.PWD_NO_USERNAME_INCLUSION, 409);
         }
 
         if (!isPasswordConfirmed(userRequestDTO)) {
-            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            throw new CustomException(CustomErrorCode.PWD_MISMATCH_EXCEPTION, 409);
         }
 
         User user = new User(email, username, password);
@@ -43,10 +45,10 @@ public class UserService {
         String password = userRequestDTO.getPassword();
 
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 401));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(CustomErrorCode.PWD_MISMATCH_EXCEPTION, 409);
         }
     }
 
