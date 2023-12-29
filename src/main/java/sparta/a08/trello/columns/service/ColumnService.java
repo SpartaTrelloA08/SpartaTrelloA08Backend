@@ -14,6 +14,8 @@ import sparta.a08.trello.columns.dto.CommonResponseDto;
 import sparta.a08.trello.columns.dto.PositionRequestDto;
 import sparta.a08.trello.columns.entity.Columns;
 import sparta.a08.trello.columns.repository.ColumnsRepository;
+import sparta.a08.trello.common.exception.CustomErrorCode;
+import sparta.a08.trello.common.exception.CustomException;
 
 @Service
 @RequiredArgsConstructor
@@ -30,19 +32,19 @@ public class ColumnService {
 
     @Transactional
     public CommonResponseDto createColumn(ColumnRequestDto columnRequestDto) {
-        Columns column = new Columns(columnRequestDto);
-        Long newPosition = columnRepository.findMaxPosition();
-        column.setCreatedAt(LocalDateTime.now());
-        column.setModifiedAt(LocalDateTime.now());
-        column.setPosition(newPosition);
+        Columns column = Columns.builder()
+                .title(columnRequestDto.getTitle())
+                .position(columnRepository.findMaxPosition())
+                .build();
+
         columnRepository.save(column);
-        return new CommonResponseDto("컬럼 생성 완료", HttpStatus.CREATED.value());
+        return new CommonResponseDto("컬럼 생성 완료", 200);
     }
 
     @Transactional
     public CommonResponseDto updateColumn(Long id, ColumnRequestDto requestDto) {
         Columns column = columnRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 컬럼"));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.COLUMN_NOT_FOUND_EXCEPTION, 404));
 
         column.updateColumn(requestDto);
 
@@ -58,7 +60,7 @@ public class ColumnService {
     @Transactional
     public CommonResponseDto movePosition(Long id, PositionRequestDto positionRequestDto) {
         Columns column = columnRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 컬럼"));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.COLUMN_NOT_FOUND_EXCEPTION, 404));
 
         Long currentPosition = column.getPosition();
         Long newPosition = positionRequestDto.getNewPosition();

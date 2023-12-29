@@ -3,15 +3,7 @@ package sparta.a08.trello.columns.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sparta.a08.trello.columns.dto.ColumnRequestDto;
 import sparta.a08.trello.columns.dto.ColumnResponseDto;
 import sparta.a08.trello.columns.dto.CommonResponseDto;
@@ -33,28 +25,35 @@ public class ColumnsController {
 
     @PostMapping
     public ResponseEntity<CommonResponseDto> createColumn(
-            @RequestBody ColumnRequestDto columnRequestDto) {
+            @RequestBody ColumnRequestDto columnRequestDto
+    ) {
         CommonResponseDto response = columnService.createColumn(columnRequestDto);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PutMapping("/{columnId}")
-    public ResponseEntity<CommonResponseDto> updateColumn(@PathVariable Long id,
-            @RequestBody ColumnRequestDto requestDto) {
-        CommonResponseDto response = columnService.updateColumn(id, requestDto);
+    @PatchMapping("/{columnId}")
+    public ResponseEntity<CommonResponseDto> updateColumn(
+            @PathVariable(name = "columnId") Long columnId,
+            @RequestBody ColumnRequestDto requestDto
+    ) {
+        CommonResponseDto response = columnService.updateColumn(columnId, requestDto);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @DeleteMapping("/{columnId}")
-    public ResponseEntity<CommonResponseDto> deleteColumn(@PathVariable Long id) {
-        CommonResponseDto response = columnService.deleteColumn(id);
+    public ResponseEntity<CommonResponseDto> deleteColumn(
+            @PathVariable(name = "columnId") Long columnId
+    ) {
+        CommonResponseDto response = columnService.deleteColumn(columnId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @PatchMapping("/{columnId}/move")
-    public ResponseEntity<CommonResponseDto> moveColumnPosition(@PathVariable Long id,
-            @RequestBody PositionRequestDto positionRequestDto) {
-        CommonResponseDto response = columnService.movePosition(id, positionRequestDto);
+    public ResponseEntity<CommonResponseDto> moveColumnPosition(
+            @PathVariable(name = "columnId") Long columnId,
+            @RequestBody PositionRequestDto positionRequestDto
+    ) {
+        CommonResponseDto response = columnService.movePosition(columnId, positionRequestDto);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
