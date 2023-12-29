@@ -20,7 +20,7 @@ import sparta.a08.trello.common.cloud.s3.S3Const;
 import sparta.a08.trello.common.cloud.s3.S3Util;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
-import sparta.a08.trello.user.User;
+import sparta.a08.trello.user.entity.User;
 
 
 import java.util.Optional;

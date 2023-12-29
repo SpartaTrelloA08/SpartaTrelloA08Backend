@@ -1,4 +1,4 @@
-package sparta.a08.trello;
+package sparta.a08.trello.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

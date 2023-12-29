@@ -1,4 +1,4 @@
-package sparta.a08.trello.user;
+package sparta.a08.trello.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
