@@ -1,4 +1,4 @@
-package sparta.a08.trello.config;
+package sparta.a08.trello.common.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import sparta.a08.trello.jwt.JwtAuthorizationFilter;
-import sparta.a08.trello.jwt.JwtUtil;
-import sparta.a08.trello.user.UserDetailsService;
+import sparta.a08.trello.common.jwt.JwtAuthorizationFilter;
+import sparta.a08.trello.common.jwt.JwtUtil;
+import sparta.a08.trello.common.security.UserDetailsService;
 
 
 @Configuration

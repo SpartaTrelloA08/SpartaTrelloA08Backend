@@ -1,4 +1,4 @@
-package sparta.a08.trello.jwt;
+package sparta.a08.trello.common.jwt;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,8 +16,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sparta.a08.trello.CommonResponseDTO;
-import sparta.a08.trello.user.UserDetailsService;
+import sparta.a08.trello.common.CommonResponseDTO;
+import sparta.a08.trello.common.security.UserDetailsService;
 
 import java.io.IOException;
 import java.util.Objects;

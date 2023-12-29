@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import sparta.a08.trello.card.Card;
-import sparta.a08.trello.user.User;
+import sparta.a08.trello.user.entity.User;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

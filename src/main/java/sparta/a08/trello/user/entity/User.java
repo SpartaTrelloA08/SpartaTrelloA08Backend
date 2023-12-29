@@ -1,4 +1,4 @@
-package sparta.a08.trello.user;
+package sparta.a08.trello.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -24,10 +24,16 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private String refreshToken;
+
     @Builder
     public User(String email, String username, String password) {
         this.email = email;
         this.username = username;
         this.password = password;
+    }
+
+    public void logout() {
+        refreshToken = null;
     }
 }
