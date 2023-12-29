@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sparta.a08.trello.board.entity.enums.UserBoardRole;
-import sparta.a08.trello.user.entity.User;
+import sparta.a08.trello.user.User;
 
 @Entity
 @Getter

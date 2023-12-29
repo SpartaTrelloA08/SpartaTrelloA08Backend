@@ -1,6 +1,7 @@
 package sparta.a08.trello.common;
 
-import sparta.a08.trello.user.entity.User;
+
+import sparta.a08.trello.user.User;
 
 public interface CommonTest {
     Long TEST_USER_ID = 1L;

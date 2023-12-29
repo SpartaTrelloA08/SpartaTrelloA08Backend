@@ -13,14 +13,14 @@ public class ColumnResponseDto {
     private Long id;
     private String title;
     private String createdAt;
-    private String modifiedAt;
+    private String lastModifiedAt;
 
     public static ColumnResponseDto fromEntity(Columns column) {
         return new ColumnResponseDto(
                 column.getId(),
                 column.getTitle(),
                 column.getCreatedAt().toString(),
-                column.getModifiedAt().toString()
+                column.getLastModifiedAt().toString()
         );
     }
 }

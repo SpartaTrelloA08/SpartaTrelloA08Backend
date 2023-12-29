@@ -2,21 +2,21 @@ package sparta.a08.trello.columns.entity;
 
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sparta.a08.trello.Entity.Board;
-import sparta.a08.trello.Entity.Card;
+import sparta.a08.trello.Card.Card;
+import sparta.a08.trello.board.entity.Board;
 import sparta.a08.trello.columns.dto.ColumnRequestDto;
+import sparta.a08.trello.common.BaseEntity;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-public class Columns {
+public class Columns extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +26,10 @@ public class Columns {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime modifiedAt;
-
     @OneToMany(mappedBy = "columns", cascade = CascadeType.ALL)
     private List<Card> cards;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
@@ -43,12 +37,14 @@ public class Columns {
     private Long position;
 
     @Builder
-    public Columns(ColumnRequestDto columnRequestDto) {
-        this.title = columnRequestDto.getTitle();
+    public Columns(String title, List<Card> cards, Board board, Long position) {
+        this.title = title;
+        this.cards = cards;
+        this.board = board;
+        this.position = position;
     }
 
     public void updateColumn(ColumnRequestDto columnRequestDto) {
         this.title = columnRequestDto.getTitle();
-        this.modifiedAt = LocalDateTime.now();
     }
 }
