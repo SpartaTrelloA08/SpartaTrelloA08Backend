@@ -14,8 +14,9 @@ import sparta.a08.trello.comment.entity.Comment;
 import sparta.a08.trello.comment.repository.CommentRepository;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
-import sparta.a08.trello.user.User;
-import sparta.a08.trello.user.UserRepository;
+import sparta.a08.trello.user.entity.User;
+import sparta.a08.trello.user.repository.UserRepository;
+
 
 @Service
 @RequiredArgsConstructor

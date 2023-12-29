@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sparta.a08.trello.Card.Card;
 import sparta.a08.trello.common.BaseEntity;
-import sparta.a08.trello.user.User;
+import sparta.a08.trello.user.entity.User;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
