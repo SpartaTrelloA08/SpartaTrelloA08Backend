@@ -4,7 +4,7 @@ import sparta.a08.trello.board.dto.BoardColorRequest;
 import sparta.a08.trello.board.dto.BoardColorResponse;
 import sparta.a08.trello.board.dto.BoardRequest;
 import sparta.a08.trello.board.dto.BoardResponse;
-import sparta.a08.trello.user.User;
+import sparta.a08.trello.user.entity.User;
 
 
 public interface BoardService {
