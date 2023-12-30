@@ -198,4 +198,8 @@ class BoardServiceTest implements BoardTest {
             assertEquals(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION, exception.getErrorCode());
         }
     }
+
+
+    //inviteUSerBoard: 메일 발송 테스를 위해 postman 으로 테스트(완료)
+    //createUserBoard: 메일 발송 테스를 위해 postman 으로 테스트(완료)
 }
