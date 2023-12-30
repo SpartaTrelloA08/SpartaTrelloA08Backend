@@ -44,6 +44,13 @@ public interface BoardService {
     BoardResponse deleteBoard(User user, Long boardId);
 
     /**
+     * Board에 속해있는 사용자 리스트 조회
+     * @param boardId 사용자 리스트 조회 대상 Board
+     * @return Board 사용자 리스트 조회 결과
+     * */
+    List<UserBoardResponse> readUserBoard(Long boardId);
+
+    /**
      * Board 사용자 초대 요청
      * @param user Board 사용자 초대 요청자
      * @param request Board 사용자 초대 대상자 이메일 리스트

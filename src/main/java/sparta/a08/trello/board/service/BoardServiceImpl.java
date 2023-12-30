@@ -24,8 +24,6 @@ import sparta.a08.trello.common.smtp.SmtpUtil;
 import sparta.a08.trello.user.entity.User;
 import sparta.a08.trello.user.repository.UserRepository;
 
-
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,6 +98,13 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.delete(findBoard);
 
         return new BoardResponse(findBoard);
+    }
+
+    @Override
+    public List<UserBoardResponse> readUserBoard(Long boardId) {
+        List<UserBoard> result = userBoardRepository.findByBoard_IdJoinUser(boardId);
+
+        return result.stream().map(UserBoardResponse::new).toList();
     }
 
     @Override

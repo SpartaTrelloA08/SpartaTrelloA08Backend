@@ -62,6 +62,15 @@ public class BoardController {
         );
     }
 
+    @GetMapping("/{boardId}/users")
+    public ResponseEntity<List<UserBoardResponse>> readUserBoard(
+            @PathVariable(name = "boardId") Long boardId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                boardService.readUserBoard(boardId)
+        );
+    }
+
     @PostMapping("/{boardId}/users/invite")
     public ResponseEntity<Void> inviteUserBoard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
