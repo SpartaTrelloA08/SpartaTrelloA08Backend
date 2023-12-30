@@ -104,6 +104,9 @@ public class BoardServiceImpl implements BoardService {
     public List<UserBoardResponse> readUserBoard(Long boardId) {
         List<UserBoard> result = userBoardRepository.findByBoard_IdJoinUser(boardId);
 
+        //Board 생성시 기본적으로 ADMIN 권한을 가진 UserBoard가 생성되므로 result가 비어있는 경우는 없음
+        if(result.isEmpty()) throw new CustomException(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION, 404);
+
         return result.stream().map(UserBoardResponse::new).toList();
     }
 
@@ -116,17 +119,14 @@ public class BoardServiceImpl implements BoardService {
         StringBuilder content = new StringBuilder();
 
         for (UserBoardInviteRequest req : request) {
-            User findUser = userRepository.findByEmail(req.getEmail())
-                    .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 404));
-
             //메일 전송
             content
                     .append("http://localhost:8080/api")
                     .append("/boards/").append(boardId)
-                    .append("/users?email=").append(findUser.getEmail());
+                    .append("/users/approve?email=").append(req.getEmail());
 
             MailRequest mailRequest = MailRequest.builder()
-                    .to(findUser.getEmail())
+                    .to(req.getEmail())
                     .title(title)
                     .content(content.toString())
                     .build();
@@ -139,7 +139,7 @@ public class BoardServiceImpl implements BoardService {
             //초대 정보 저장
             userBoardInviteRepository.save(
                     UserBoardInvite.builder()
-                            .user(findUser)
+                            .email(req.getEmail())
                             .board(findBoard)
                             .build());
         }
@@ -158,7 +158,7 @@ public class BoardServiceImpl implements BoardService {
         createUserBoard(findUser, findBoard, UserBoardRole.MEMBER);
 
         //UserBoardInvite 삭제
-        userBoardInviteRepository.deleteByUser_IdAndBoard_Id(findUser.getId(), findBoard.getId());
+        userBoardInviteRepository.deleteByEmailAndBoard_Id(findUser.getEmail(), findBoard.getId());
     }
 
 

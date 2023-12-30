@@ -81,7 +81,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @GetMapping("/{boardId}/users")
+    @GetMapping("/{boardId}/users/approve")
     public ResponseEntity<Void> createUserBoard(
             @PathVariable(name = "boardId") Long boardId,
             @RequestParam(name = "email") String email

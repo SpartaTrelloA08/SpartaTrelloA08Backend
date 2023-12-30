@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sparta.a08.trello.user.entity.User;
 
 /**
  * Board에 초대한 User 정보를 담기 위한 테이블
@@ -16,26 +15,20 @@ import sparta.a08.trello.user.entity.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserBoardInvite {
 
-    @EmbeddedId
-    private UserBoardPK userBoardPK;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @MapsId("userId")
-    private User user;
+    @Column(name = "email")
+    private String email;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
-    @MapsId("boardId")
     private Board board;
 
     @Builder
-    public UserBoardInvite(User user, Board board) {
-        this.user = user;
+    public UserBoardInvite(Board board, String email) {
+        this.email = email;
         this.board = board;
-        this.userBoardPK = UserBoardPK.builder()
-                .userId(user.getId())
-                .boardId(board.getId())
-                .build();
     }
 }
