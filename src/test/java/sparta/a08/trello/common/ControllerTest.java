@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import sparta.a08.trello.board.controller.BoardController;
-import sparta.a08.trello.user.UserDetailsImpl;
+import sparta.a08.trello.common.security.UserDetailsImpl;
 
 @WebMvcTest(BoardController.class)
 public class ControllerTest implements CommonTest {

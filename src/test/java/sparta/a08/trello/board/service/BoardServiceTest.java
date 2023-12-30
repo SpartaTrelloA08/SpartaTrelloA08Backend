@@ -9,13 +9,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sparta.a08.trello.board.BoardTest;
 import sparta.a08.trello.board.dto.BoardResponse;
+import sparta.a08.trello.board.dto.UserBoardResponse;
 import sparta.a08.trello.board.entity.UserBoardPK;
 import sparta.a08.trello.board.repository.BoardRepository;
 import sparta.a08.trello.board.repository.UserBoardRepository;
 import sparta.a08.trello.common.cloud.s3.S3Util;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
+import sparta.a08.trello.common.smtp.SmtpUtil;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +40,9 @@ class BoardServiceTest implements BoardTest {
 
     @Mock
     S3Util s3Util;
+
+    @Mock
+    SmtpUtil smtpUtil;
 
     @Test
     @DisplayName("Board 생성 테스트")
@@ -154,5 +160,27 @@ class BoardServiceTest implements BoardTest {
         //then
         assertEquals(TEST_BOARD.getTitle(), response.getTitle());
         assertEquals(TEST_BOARD.getContent(), response.getContent());
+    }
+
+    @Nested
+    @DisplayName("Board에 속해있는 사용자 리스트 조회 테스트")
+    class readUserBoardTest {
+
+        @Test
+        @DisplayName("Board에 속해있는 사용자 리스트 조회 테스트 성공")
+        void readUserBoard_success() {
+            //given
+            given(userBoardRepository.findByBoard_IdJoinUser(TEST_BOARD_ID))
+                    .willReturn(List.of(TEST_USER_BOARD_ADMIN, TEST_USER_BOARD_MEMBER));
+
+            //when
+            List<UserBoardResponse> response = boardService.readUserBoard(TEST_BOARD_ID);
+
+            //then
+            assertEquals(2, response.size());
+            for (int i = 1; i <= response.size(); i++) {
+                System.out.println(i + ": " + response.get(i-1).getUsername());
+            }
+        }
     }
 }
