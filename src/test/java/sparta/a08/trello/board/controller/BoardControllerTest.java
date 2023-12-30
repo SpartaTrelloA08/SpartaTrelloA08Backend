@@ -161,4 +161,7 @@ class BoardControllerTest extends ControllerTest implements BoardTest {
         //then
         action.andExpect(status().isOk());
     }
+
+    //inviteUSerBoard: 메일 발송 테스를 위해 postman 으로 테스트(완료)
+    //createUserBoard: 메일 발송 테스를 위해 postman 으로 테스트(완료)
 }
