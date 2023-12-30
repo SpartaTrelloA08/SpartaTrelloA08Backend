@@ -12,15 +12,13 @@ import sparta.a08.trello.board.dto.BoardRequest;
 import sparta.a08.trello.board.service.BoardServiceImpl;
 import sparta.a08.trello.common.ControllerTest;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class BoardControllerTest extends ControllerTest implements BoardTest {
 
@@ -38,7 +36,7 @@ class BoardControllerTest extends ControllerTest implements BoardTest {
             given(boardService.createBoard(eq(TEST_USER), any(BoardRequest.class))).willReturn(TEST_BOARD_RESPONSE);
 
             //when
-            ResultActions action = mockMvc.perform(post("/api/board")
+            ResultActions action = mockMvc.perform(post("/api/boards")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(TEST_BOARD_REQUEST)));
@@ -60,7 +58,7 @@ class BoardControllerTest extends ControllerTest implements BoardTest {
                     .build();
 
             //when
-            ResultActions action = mockMvc.perform(post("/api/board")
+            ResultActions action = mockMvc.perform(post("/api/boards")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)));
@@ -84,7 +82,7 @@ class BoardControllerTest extends ControllerTest implements BoardTest {
                     .willReturn(TEST_BOARD_RESPONSE);
 
             //when
-            ResultActions action = mockMvc.perform(patch("/api/board/{boardId}", TEST_BOARD_ID)
+            ResultActions action = mockMvc.perform(patch("/api/boards/{boardId}", TEST_BOARD_ID)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(TEST_BOARD_REQUEST)));
@@ -106,7 +104,7 @@ class BoardControllerTest extends ControllerTest implements BoardTest {
                     .build();
 
             //when
-            ResultActions action = mockMvc.perform(patch("/api/board/{boardId}", TEST_BOARD_ID)
+            ResultActions action = mockMvc.perform(patch("/api/boards/{boardId}", TEST_BOARD_ID)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)));
@@ -124,7 +122,7 @@ class BoardControllerTest extends ControllerTest implements BoardTest {
         //given
 
         //when
-        ResultActions action = mockMvc.perform(put("/api/board/{boardId}/color", TEST_BOARD_ID)
+        ResultActions action = mockMvc.perform(put("/api/boards/{boardId}/color", TEST_BOARD_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TEST_BOARD_COLOR_REQUEST))
@@ -140,10 +138,25 @@ class BoardControllerTest extends ControllerTest implements BoardTest {
         //given
 
         //when
-        ResultActions action = mockMvc.perform(delete("/api/board/{boardId}", TEST_BOARD_ID)
+        ResultActions action = mockMvc.perform(delete("/api/boards/{boardId}", TEST_BOARD_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TEST_BOARD_COLOR_REQUEST)));
+
+        //then
+        action.andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Board에 속해있는 사용자 리스트 조회 테스트")
+    void readUserBoardTest() throws Exception {
+        //given
+//        given(boardService.readUserBoard(TEST_BOARD_ID))
+//                .willReturn(List.of(new UserBoardResponse(TEST_USER_BOARD_ADMIN)));
+
+        //when
+        ResultActions action = mockMvc.perform(get("/api/boards/{boardId}/users", TEST_BOARD_ID)
+                .accept(MediaType.APPLICATION_JSON));
 
         //then
         action.andExpect(status().isOk());
