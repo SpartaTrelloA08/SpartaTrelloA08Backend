@@ -2,6 +2,7 @@ package sparta.a08.trello.board.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sparta.a08.trello.user.entity.User;
@@ -27,4 +28,14 @@ public class UserBoardInvite {
     @JoinColumn(name = "board_id")
     @MapsId("boardId")
     private Board board;
+
+    @Builder
+    public UserBoardInvite(User user, Board board) {
+        this.user = user;
+        this.board = board;
+        this.userBoardPK = UserBoardPK.builder()
+                .userId(user.getId())
+                .boardId(board.getId())
+                .build();
+    }
 }

@@ -5,18 +5,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import sparta.a08.trello.board.dto.BoardColorRequest;
-import sparta.a08.trello.board.dto.BoardColorResponse;
-import sparta.a08.trello.board.dto.BoardRequest;
-import sparta.a08.trello.board.dto.BoardResponse;
+import sparta.a08.trello.board.dto.*;
 import sparta.a08.trello.board.service.BoardServiceImpl;
-import sparta.a08.trello.user.UserDetailsImpl;
+import sparta.a08.trello.common.security.UserDetailsImpl;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/board")
+@RequestMapping("/api/boards")
 public class BoardController {
 
     private final BoardServiceImpl boardService;
@@ -62,5 +60,23 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 boardService.deleteBoard(userDetails.getUser(), boardId)
         );
+    }
+
+    @PostMapping("/{boardId}/users/invite")
+    public ResponseEntity<Void> inviteUserBoard(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody List<UserBoardInviteRequest> request,
+            @PathVariable(name = "boardId") Long boardId
+    ) {
+        boardService.inviteUserBoard(userDetails.getUser(), request, boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @GetMapping("/{boardId}/users")
+    public void createUserBoard(
+            @PathVariable(name = "boardId") Long boardId,
+            @RequestParam(name = "email") String email
+    ) {
+        System.out.println("[request] email = " + email);
     }
 }

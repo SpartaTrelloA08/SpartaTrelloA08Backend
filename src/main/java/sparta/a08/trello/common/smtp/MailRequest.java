@@ -1,4 +1,4 @@
-package sparta.a08.trello.common.smtp.dto;
+package sparta.a08.trello.common.smtp;
 
 import lombok.Builder;
 import lombok.Getter;

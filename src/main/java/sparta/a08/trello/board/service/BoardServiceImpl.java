@@ -5,24 +5,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import sparta.a08.trello.board.dto.BoardColorRequest;
-import sparta.a08.trello.board.dto.BoardColorResponse;
-import sparta.a08.trello.board.dto.BoardRequest;
-import sparta.a08.trello.board.dto.BoardResponse;
+import sparta.a08.trello.board.dto.*;
 import sparta.a08.trello.board.entity.Board;
 import sparta.a08.trello.board.entity.UserBoard;
+import sparta.a08.trello.board.entity.UserBoardInvite;
 import sparta.a08.trello.board.entity.UserBoardPK;
 import sparta.a08.trello.board.entity.enums.BoardColor;
 import sparta.a08.trello.board.entity.enums.UserBoardRole;
 import sparta.a08.trello.board.repository.BoardRepository;
+import sparta.a08.trello.board.repository.UserBoardInviteRepository;
 import sparta.a08.trello.board.repository.UserBoardRepository;
 import sparta.a08.trello.common.cloud.s3.S3Const;
 import sparta.a08.trello.common.cloud.s3.S3Util;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
+import sparta.a08.trello.common.smtp.MailRequest;
+import sparta.a08.trello.common.smtp.SmtpUtil;
 import sparta.a08.trello.user.entity.User;
+import sparta.a08.trello.user.repository.UserRepository;
 
 
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,8 +37,11 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final UserBoardRepository userBoardRepository;
+    private final UserBoardInviteRepository userBoardInviteRepository;
+    private final UserRepository userRepository;
 
     private final S3Util s3Util;
+    private final SmtpUtil smtpUtil;
 
     @Override
     @Transactional
@@ -93,6 +100,44 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.delete(findBoard);
 
         return new BoardResponse(findBoard);
+    }
+
+    @Override
+    @Transactional
+    public void inviteUserBoard(User user, List<UserBoardInviteRequest> request, Long boardId) {
+        Board findBoard = getBoard(user, boardId);
+
+        String title = user.getUsername() + " invited you to Trello board";
+        StringBuilder content = new StringBuilder();
+
+        for (UserBoardInviteRequest req : request) {
+            User findUser = userRepository.findByEmail(req.getEmail())
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 404));
+
+            //메일 전송
+            content
+                    .append("http://localhost:8080/api")
+                    .append("/boards/").append(boardId)
+                    .append("/users?email=").append(findUser.getEmail());
+
+            MailRequest mailRequest = MailRequest.builder()
+                    .to(findUser.getEmail())
+                    .title(title)
+                    .content(content.toString())
+                    .build();
+
+            smtpUtil.sendMail(mailRequest);
+
+            //StringBuilder flush
+            content.setLength(0);
+
+            //초대 정보 저장
+            userBoardInviteRepository.save(
+                    UserBoardInvite.builder()
+                            .user(findUser)
+                            .board(findBoard)
+                            .build());
+        }
     }
 
 

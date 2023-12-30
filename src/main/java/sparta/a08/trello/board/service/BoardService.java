@@ -1,10 +1,9 @@
 package sparta.a08.trello.board.service;
 
-import sparta.a08.trello.board.dto.BoardColorRequest;
-import sparta.a08.trello.board.dto.BoardColorResponse;
-import sparta.a08.trello.board.dto.BoardRequest;
-import sparta.a08.trello.board.dto.BoardResponse;
+import sparta.a08.trello.board.dto.*;
 import sparta.a08.trello.user.entity.User;
+
+import java.util.List;
 
 
 public interface BoardService {
@@ -43,4 +42,12 @@ public interface BoardService {
      * @return Board 삭제 결과
      * */
     BoardResponse deleteBoard(User user, Long boardId);
+
+    /**
+     * Board 사용자 초대
+     * @param user Board 사용자 초대 요청자
+     * @param request Board 사용자 초대 대상자 이메일 리스트
+     * @param boardId Board 사용자 초대 대상 Board
+     * */
+    void inviteUserBoard(User user, List<UserBoardInviteRequest> request, Long boardId);
 }
