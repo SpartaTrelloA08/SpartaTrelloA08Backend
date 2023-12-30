@@ -182,5 +182,20 @@ class BoardServiceTest implements BoardTest {
                 System.out.println(i + ": " + response.get(i-1).getUsername());
             }
         }
+
+        @Test
+        @DisplayName("Board에 속해있는 사용자 리스트 조회 테스트 실패 - Board가 존재하지 않는 경우")
+        void readUserBoard_fail_notFound() {
+            //given
+            given(userBoardRepository.findByBoard_IdJoinUser(TEST_BOARD_ID)).willReturn(List.of());
+
+            //when
+            CustomException exception = assertThrows(CustomException.class, () ->
+                    boardService.readUserBoard(TEST_BOARD_ID)
+            );
+
+            //then
+            assertEquals(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION, exception.getErrorCode());
+        }
     }
 }
