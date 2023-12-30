@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import sparta.a08.trello.common.CommonResponseDTO;
 import sparta.a08.trello.common.jwt.JwtUtil;
 import sparta.a08.trello.common.security.UserDetailsImpl;
+import sparta.a08.trello.user.dto.UpdateUserRequestDTO;
 import sparta.a08.trello.user.dto.UserRequestDTO;
 import sparta.a08.trello.user.entity.User;
 import sparta.a08.trello.user.service.UserService;
@@ -49,6 +50,23 @@ public class UserController {
         userService.logoutUser(findUser.getId());
 
         return ResponseEntity.ok().body(new CommonResponseDTO("로그아웃 성공", HttpStatus.OK.value()));
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<CommonResponseDTO> updateProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @RequestBody UpdateUserRequestDTO updatedUserRequestDTO) {
+
+        User existingUser = userDetails.getUser();
+        userService.updateUserProfile(existingUser.getId(), updatedUserRequestDTO);
+
+        return ResponseEntity.ok().body(new CommonResponseDTO("프로필이 수정되었습니다.", HttpStatus.OK.value()));
     }
 
 }
