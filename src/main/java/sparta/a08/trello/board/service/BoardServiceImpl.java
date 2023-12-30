@@ -140,6 +140,22 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+    @Override
+    @Transactional
+    public void createUserBoard(Long boardId, String email) {
+        Board findBoard = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION, 404));
+
+        User findUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 404));
+
+        //UserBoard 생성
+        createUserBoard(findUser, findBoard, UserBoardRole.MEMBER);
+
+        //UserBoardInvite 삭제
+        userBoardInviteRepository.deleteByUser_IdAndBoard_Id(findUser.getId(), findBoard.getId());
+    }
+
 
     /**🔽🔽🔽 PRIVATE 🔽🔽🔽**/
     //User, Board ManyToMany 관계를 위한 연결 테이블 레코드 생성

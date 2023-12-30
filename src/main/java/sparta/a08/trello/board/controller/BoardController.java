@@ -73,10 +73,11 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}/users")
-    public void createUserBoard(
+    public ResponseEntity<Void> createUserBoard(
             @PathVariable(name = "boardId") Long boardId,
             @RequestParam(name = "email") String email
     ) {
-        System.out.println("[request] email = " + email);
+        boardService.createUserBoard(boardId, email);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

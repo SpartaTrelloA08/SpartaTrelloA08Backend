@@ -7,4 +7,6 @@ import sparta.a08.trello.board.entity.UserBoardPK;
 
 @Repository
 public interface UserBoardInviteRepository extends JpaRepository<UserBoardInvite, UserBoardPK> {
+
+    void deleteByUser_IdAndBoard_Id(Long userId, Long boardId);
 }

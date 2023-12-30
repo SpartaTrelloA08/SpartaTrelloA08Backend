@@ -44,10 +44,17 @@ public interface BoardService {
     BoardResponse deleteBoard(User user, Long boardId);
 
     /**
-     * Board 사용자 초대
+     * Board 사용자 초대 요청
      * @param user Board 사용자 초대 요청자
      * @param request Board 사용자 초대 대상자 이메일 리스트
      * @param boardId Board 사용자 초대 대상 Board
      * */
     void inviteUserBoard(User user, List<UserBoardInviteRequest> request, Long boardId);
+
+    /**
+     * Board 사용자 추가
+     * @param boardId Board 사용자 추가 대상 Board
+     * @param email Board 사용자 추가 대상자 이메일
+     * */
+    void createUserBoard(Long boardId, String email);
 }
