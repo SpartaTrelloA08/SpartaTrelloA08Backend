@@ -8,6 +8,7 @@ import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
 import sparta.a08.trello.user.dto.UserSearchResponseDTO;
 import sparta.a08.trello.user.repository.UserQueryRepositoryImpl;
+import sparta.a08.trello.user.dto.UpdateUserRequestDTO;
 import sparta.a08.trello.user.repository.UserRepository;
 import sparta.a08.trello.user.dto.UserRequestDTO;
 import sparta.a08.trello.user.entity.User;
@@ -66,6 +67,17 @@ public class UserService {
         User findUser = userRepository.findById(userId)
                 .orElseThrow((() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 401)));
         findUser.logout();
+    }
+
+    public void updateUserProfile(Long userId, UpdateUserRequestDTO updatedUserRequestDTO) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 404));
+
+        if (updatedUserRequestDTO.getUsername() != null) {
+            existingUser.setUsername(updatedUserRequestDTO.getUsername());
+        }
+
+        userRepository.save(existingUser);
     }
 
     public boolean isPasswordValid(UserRequestDTO userRequestDTO) {

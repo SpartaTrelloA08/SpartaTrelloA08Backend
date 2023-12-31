@@ -1,9 +1,11 @@
 package sparta.a08.trello.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -22,8 +24,10 @@ public class User {
     private String username;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
+    @JsonIgnore
     private String refreshToken;
 
     @Builder
@@ -36,4 +40,9 @@ public class User {
     public void logout() {
         refreshToken = null;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 }
