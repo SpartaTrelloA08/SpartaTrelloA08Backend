@@ -6,10 +6,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
+import sparta.a08.trello.user.dto.UserSearchResponseDTO;
+import sparta.a08.trello.user.repository.UserQueryRepositoryImpl;
 import sparta.a08.trello.user.dto.UpdateUserRequestDTO;
 import sparta.a08.trello.user.repository.UserRepository;
 import sparta.a08.trello.user.dto.UserRequestDTO;
 import sparta.a08.trello.user.entity.User;
+import sparta.a08.trello.user.repository.UserSearchCond;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
+    private final UserQueryRepositoryImpl userQueryRepository;
 
     public void signup(UserRequestDTO userRequestDTO) {
         String email = userRequestDTO.getEmail();
@@ -80,5 +86,10 @@ public class UserService {
 
     public boolean isPasswordConfirmed(UserRequestDTO userRequestDTO) {
         return userRequestDTO.getPassword().equals(userRequestDTO.getConfirmPassword());
+    }
+
+    public List<UserSearchResponseDTO> searchUser(String keyword) {
+        return userQueryRepository.searchUser(new UserSearchCond(keyword))
+                .stream().map(UserSearchResponseDTO::new).toList();
     }
 }

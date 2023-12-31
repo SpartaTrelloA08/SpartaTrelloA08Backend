@@ -7,13 +7,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import sparta.a08.trello.board.dto.BoardResponse;
+import sparta.a08.trello.board.service.BoardServiceImpl;
 import sparta.a08.trello.common.CommonResponseDTO;
 import sparta.a08.trello.common.jwt.JwtUtil;
 import sparta.a08.trello.common.security.UserDetailsImpl;
 import sparta.a08.trello.user.dto.UpdateUserRequestDTO;
 import sparta.a08.trello.user.dto.UserRequestDTO;
+import sparta.a08.trello.user.dto.UserSearchResponseDTO;
 import sparta.a08.trello.user.entity.User;
 import sparta.a08.trello.user.service.UserService;
+
+import java.util.List;
 
 @RequestMapping("/api/users")
 @RestController
@@ -21,6 +26,7 @@ import sparta.a08.trello.user.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final BoardServiceImpl boardService;
 
     private final JwtUtil jwtUtil;
 
@@ -68,5 +74,22 @@ public class UserController {
 
         return ResponseEntity.ok().body(new CommonResponseDTO("프로필이 수정되었습니다.", HttpStatus.OK.value()));
     }
+  
+    @GetMapping("")
+    public ResponseEntity<List<UserSearchResponseDTO>> searchUser(
+            @RequestParam("keyword") String keyword
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                userService.searchUser(keyword)
+        );
+    }
 
+    @GetMapping("/boards")
+    public ResponseEntity<List<BoardResponse>> readMyBoard(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                boardService.readMyBoard(userDetails.getUser())
+        );
+    }
 }

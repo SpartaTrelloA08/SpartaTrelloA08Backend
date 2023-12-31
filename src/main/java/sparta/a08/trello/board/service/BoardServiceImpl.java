@@ -24,6 +24,7 @@ import sparta.a08.trello.common.smtp.SmtpUtil;
 import sparta.a08.trello.user.entity.User;
 import sparta.a08.trello.user.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ public class BoardServiceImpl implements BoardService {
         //UserBoard 생성
         createUserBoard(user, board, UserBoardRole.ADMIN);
 
-        return new BoardResponse(board);
+        return new BoardResponse(board, s3Util.getImageURL(S3Const.S3_DIR_BOARD, board.getFilename()));
     }
 
     @Override
@@ -64,7 +65,7 @@ public class BoardServiceImpl implements BoardService {
 
         findBoard.update(request.getTitle(), request.getContent());
 
-        return new BoardResponse(findBoard);
+        return new BoardResponse(findBoard, s3Util.getImageURL(S3Const.S3_DIR_BOARD, findBoard.getFilename()));
     }
 
     @Override
@@ -97,7 +98,7 @@ public class BoardServiceImpl implements BoardService {
 
         boardRepository.delete(findBoard);
 
-        return new BoardResponse(findBoard);
+        return new BoardResponse(findBoard, s3Util.getImageURL(S3Const.S3_DIR_BOARD, findBoard.getFilename()));
     }
 
     @Override
@@ -159,6 +160,21 @@ public class BoardServiceImpl implements BoardService {
 
         //UserBoardInvite 삭제
         userBoardInviteRepository.deleteByEmailAndBoard_Id(findUser.getEmail(), findBoard.getId());
+    }
+
+    @Override
+    public List<BoardResponse> readMyBoard(User user) {
+        List<UserBoard> userBoards = userBoardRepository.findByUser_IdJoinBoard(user.getId());
+
+        //response mapping list
+        List<BoardResponse> res = new ArrayList<>();
+
+        for (UserBoard userBoard : userBoards) {
+            Board board = userBoard.getBoard();
+            res.add(new BoardResponse(board, s3Util.getImageURL(S3Const.S3_DIR_BOARD, board.getFilename())));
+        }
+
+        return res;
     }
 
 

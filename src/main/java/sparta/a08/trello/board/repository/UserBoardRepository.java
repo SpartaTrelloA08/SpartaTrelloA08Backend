@@ -11,4 +11,7 @@ public interface UserBoardRepository extends JpaRepository<UserBoard, UserBoardP
 
     @Query("select ub from UserBoard ub join fetch ub.user where ub.board.id = :boardId")
     List<UserBoard> findByBoard_IdJoinUser(Long boardId);
+
+    @Query("select ub from UserBoard ub join fetch ub.board where ub.user.id = :userId")
+    List<UserBoard> findByUser_IdJoinBoard(Long userId);
 }
