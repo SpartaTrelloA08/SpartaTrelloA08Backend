@@ -11,8 +11,11 @@ import sparta.a08.trello.common.CommonResponseDTO;
 import sparta.a08.trello.common.jwt.JwtUtil;
 import sparta.a08.trello.common.security.UserDetailsImpl;
 import sparta.a08.trello.user.dto.UserRequestDTO;
+import sparta.a08.trello.user.dto.UserSearchResponseDTO;
 import sparta.a08.trello.user.entity.User;
 import sparta.a08.trello.user.service.UserService;
+
+import java.util.List;
 
 @RequestMapping("/api/users")
 @RestController
@@ -51,4 +54,12 @@ public class UserController {
         return ResponseEntity.ok().body(new CommonResponseDTO("로그아웃 성공", HttpStatus.OK.value()));
     }
 
+    @GetMapping("")
+    public ResponseEntity<List<UserSearchResponseDTO>> searchUser(
+            @RequestParam("keyword") String keyword
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                userService.searchUser(keyword)
+        );
+    }
 }
