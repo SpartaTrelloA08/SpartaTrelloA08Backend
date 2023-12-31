@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import sparta.a08.trello.board.dto.BoardResponse;
+import sparta.a08.trello.board.service.BoardServiceImpl;
 import sparta.a08.trello.common.CommonResponseDTO;
 import sparta.a08.trello.common.jwt.JwtUtil;
 import sparta.a08.trello.common.security.UserDetailsImpl;
@@ -23,6 +25,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final BoardServiceImpl boardService;
 
     private final JwtUtil jwtUtil;
 
@@ -60,6 +63,15 @@ public class UserController {
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 userService.searchUser(keyword)
+        );
+    }
+
+    @GetMapping("/boards")
+    public ResponseEntity<List<BoardResponse>> readMyBoard(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                boardService.readMyBoard(userDetails.getUser())
         );
     }
 }

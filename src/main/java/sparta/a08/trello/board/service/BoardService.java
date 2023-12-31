@@ -64,4 +64,11 @@ public interface BoardService {
      * @param email Board 사용자 추가 대상자 이메일
      * */
     void createUserBoard(Long boardId, String email);
+
+    /**
+     * User가 속해있는 Board 리스트 조회
+     * @param user 조회 대상 user
+     * @return 내 보드 조회 결과 리스트
+     * */
+    List<BoardResponse> readMyBoard(User user);
 }
