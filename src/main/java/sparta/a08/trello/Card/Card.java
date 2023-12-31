@@ -1,13 +1,9 @@
-package sparta.a08.trello.Card;
+package sparta.a08.trello.card;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sparta.a08.trello.columns.entity.Columns;
 
 @Entity
 @Getter
@@ -19,4 +15,7 @@ public class Card {
     @Column(name = "Card_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Column_id")
+    private Columns columns;
 }

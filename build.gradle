@@ -33,12 +33,15 @@ dependencies {
     //database
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // S3
+    //s3
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.232'
 
     //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-core'
+
+    //smtp
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'

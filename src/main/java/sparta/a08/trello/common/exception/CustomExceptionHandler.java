@@ -1,5 +1,6 @@
 package sparta.a08.trello.common.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +14,7 @@ public class CustomExceptionHandler {
 
     //기본 CustomException
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<CustomExceptionResponse> handleCustomException(CustomException e, HttpRequest request) {
-        log.info("request url: {}\nerror code: {}\nmessage: {}", request.getURI(), e.getErrorCode(), e.getMessage());
-
+    public ResponseEntity<CustomExceptionResponse> handleCustomException(CustomException e) {
         return ResponseEntity.status(e.getStatus()).body(
                 CustomExceptionResponse.builder()
                         .errorCode(e.getErrorCode())

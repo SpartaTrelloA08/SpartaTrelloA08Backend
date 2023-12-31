@@ -2,6 +2,7 @@ package sparta.a08.trello.board;
 
 import sparta.a08.trello.board.dto.BoardColorRequest;
 import sparta.a08.trello.board.dto.BoardRequest;
+import sparta.a08.trello.board.dto.BoardResponse;
 import sparta.a08.trello.board.entity.Board;
 import sparta.a08.trello.board.entity.UserBoard;
 import sparta.a08.trello.board.entity.UserBoardPK;
@@ -19,6 +20,10 @@ public interface BoardTest extends CommonTest {
     Board TEST_BOARD = Board.builder()
             .title(TEST_BOARD_REQUEST.getTitle())
             .content(TEST_BOARD_REQUEST.getContent())
+            .build();
+
+    BoardResponse TEST_BOARD_RESPONSE = BoardResponse.builder()
+            .board(TEST_BOARD)
             .build();
 
     UserBoardPK TEST_USER_BOARD_PK = UserBoardPK.builder()

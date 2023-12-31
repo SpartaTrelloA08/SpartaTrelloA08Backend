@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sparta.a08.trello.Card.Card;
+import sparta.a08.trello.card.Card;
 import sparta.a08.trello.board.entity.Board;
 import sparta.a08.trello.columns.dto.ColumnRequestDto;
 import sparta.a08.trello.common.BaseEntity;
