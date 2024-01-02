@@ -14,12 +14,12 @@ import sparta.a08.trello.common.BaseEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "Card")
+@Table(name = "card")
 public class Card extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Card_id")
+    @Column(name = "card_id")
     private Long id;
 
     @Column
