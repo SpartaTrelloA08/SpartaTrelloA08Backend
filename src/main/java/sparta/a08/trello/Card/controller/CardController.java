@@ -18,7 +18,7 @@ import sparta.a08.trello.columns.dto.PositionRequestDto;
 import sparta.a08.trello.common.security.UserDetailsImpl;
 
 @RestController
-@RequestMapping("/api/boards/{boardsId}/columns/{columnId}/card")
+@RequestMapping("/api/boards/{boardsId}/columns/{columnId}/cards")
 @RequiredArgsConstructor
 public class CardController {
 
