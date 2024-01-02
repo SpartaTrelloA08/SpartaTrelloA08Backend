@@ -77,7 +77,7 @@ public class BoardServiceImpl implements BoardService {
             case "service" -> findBoard.setFilename(request.getFilename());
             case "custom" -> {
                 MultipartFile file = request.getFile();
-                if (!isDefaultColor(file.getOriginalFilename())) {
+                if (!isDefaultColor(findBoard.getFilename())) {
                     //기존 이미지 삭제
                     s3Util.deleteImage(S3Const.S3_DIR_BOARD, findBoard.getFilename());
                 }
