@@ -16,8 +16,10 @@ import sparta.a08.trello.user.entity.User;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserCard {
+
     @EmbeddedId
     private UserCardPK userCardPK;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @MapsId("userId")

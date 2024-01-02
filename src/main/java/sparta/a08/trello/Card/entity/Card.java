@@ -14,12 +14,12 @@ import sparta.a08.trello.common.BaseEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "Card")
+@Table(name = "card")
 public class Card extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Card_id")
+    @Column(name = "card_id")
     private Long id;
 
     @Column
@@ -62,5 +62,10 @@ public class Card extends BaseEntity {
 
     public void setPosition(Long position){
         this.position = position;
+    }
+
+    public String setFilename(String filename) {
+        this.filename = filename;
+        return this.filename;
     }
 }

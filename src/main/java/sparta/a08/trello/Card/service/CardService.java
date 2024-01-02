@@ -6,13 +6,18 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import sparta.a08.trello.Card.dto.CardColorRequest;
+import sparta.a08.trello.Card.dto.CardColorResponse;
 import sparta.a08.trello.Card.dto.CardRequestDto;
 import sparta.a08.trello.Card.dto.CardResponseDto;
 import sparta.a08.trello.Card.entity.Card;
 import sparta.a08.trello.Card.entity.UserCard;
+import sparta.a08.trello.Card.entity.enums.CardColor;
 import sparta.a08.trello.Card.repository.CardRepository;
 import jakarta.transaction.Transactional;
 import sparta.a08.trello.Card.repository.UserCardRepository;
+import sparta.a08.trello.board.entity.enums.BoardColor;
 import sparta.a08.trello.columns.dto.CommonResponseDto;
 import sparta.a08.trello.columns.dto.PositionRequestDto;
 import sparta.a08.trello.common.cloud.s3.S3Const;
@@ -54,16 +59,16 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponseDto getCardById(Long id) {
-        Card card = cardRepository.findById(id)
+    public CardResponseDto getCardById(Long cardId) {
+        Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.CARD_NOT_FOUND_EXCEPTION, 404));
 
         return CardResponseDto.fromEntity(card, s3Util.getImageURL(S3Const.S3_DIR_BOARD, card.getFilename()));
     }
 
     @Transactional
-    public CardResponseDto updateCard(Long id, CardRequestDto cardRequestDto) {
-        Card card = cardRepository.findById(id)
+    public CardResponseDto updateCard(Long cardId, CardRequestDto cardRequestDto) {
+        Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.CARD_NOT_FOUND_EXCEPTION, 404));
 
         card.update(cardRequestDto.getTitle(), cardRequestDto.getContent(), cardRequestDto.getDueDate());
@@ -72,14 +77,14 @@ public class CardService {
     }
 
     @Transactional
-    public CommonResponseDto deleteCard(Long id) {
-        cardRepository.deleteById(id);
+    public CommonResponseDto deleteCard(Long cardId) {
+        cardRepository.deleteById(cardId);
         return new CommonResponseDto("카드 삭제 완료", 200);
     }
 
     @Transactional
-    public CommonResponseDto movePosition(Long id, PositionRequestDto positionRequestDto) {
-        Card card = cardRepository.findById(id)
+    public CommonResponseDto movePosition(Long cardId, PositionRequestDto positionRequestDto) {
+        Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.CARD_NOT_FOUND_EXCEPTION, 404));
 
         Long currentPosition = card.getPosition();
@@ -110,6 +115,28 @@ public class CardService {
         return new CommonResponseDto("카드 이동 완료", 200);
     }
 
+    @Transactional
+    public CardColorResponse updateCardColor(CardColorRequest request, Long cardId, String type) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.CARD_NOT_FOUND_EXCEPTION, 404));
+
+        switch (type) {
+            case "service" -> card.setFilename(request.getFilename());
+            case "custom" -> {
+                MultipartFile file = request.getFile();
+                if (!isDefaultColor(file.getOriginalFilename())) {
+
+                    s3Util.deleteImage(S3Const.S3_DIR_CARD, card.getFilename());
+                }
+
+                card.setFilename(s3Util.uploadImage(S3Const.S3_DIR_CARD, file));
+            }
+            default -> throw new CustomException(CustomErrorCode.INVALID_COLOR_TYPE_EXCEPTION, 400);
+        }
+
+        return new CardColorResponse(s3Util.getImageURL(S3Const.S3_DIR_CARD, card.getFilename()));
+    }
+
 
 
     @Transactional
@@ -132,5 +159,13 @@ public class CardService {
                 .build();
 
         userCardRepository.save(userCard);
+    }
+
+    private boolean isDefaultColor(String filename) {
+        for(CardColor value : CardColor.values()) {
+            if(value.getUrl().equals(filename)) return true;
+        }
+
+        return false;
     }
 }
