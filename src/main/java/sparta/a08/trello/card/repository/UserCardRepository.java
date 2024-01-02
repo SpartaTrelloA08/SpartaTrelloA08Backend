@@ -1,10 +1,10 @@
-package sparta.a08.trello.Card.repository;
+package sparta.a08.trello.card.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import sparta.a08.trello.Card.entity.UserCard;
-import sparta.a08.trello.Card.entity.UserCardPK;
+import sparta.a08.trello.card.entity.UserCard;
+import sparta.a08.trello.card.entity.UserCardPK;
 
 public interface UserCardRepository extends JpaRepository<UserCard, UserCardPK> {
 

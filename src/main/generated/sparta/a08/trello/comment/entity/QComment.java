@@ -24,7 +24,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final sparta.a08.trello.common.QBaseEntity _super = new sparta.a08.trello.common.QBaseEntity(this);
 
-    public final sparta.a08.trello.Card.entity.QCard card;
+    public final sparta.a08.trello.card.entity.QCard card;
 
     public final StringPath content = createString("content");
 
@@ -56,7 +56,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.card = inits.isInitialized("card") ? new sparta.a08.trello.Card.entity.QCard(forProperty("card"), inits.get("card")) : null;
+        this.card = inits.isInitialized("card") ? new sparta.a08.trello.card.entity.QCard(forProperty("card"), inits.get("card")) : null;
         this.user = inits.isInitialized("user") ? new sparta.a08.trello.user.entity.QUser(forProperty("user")) : null;
     }
 

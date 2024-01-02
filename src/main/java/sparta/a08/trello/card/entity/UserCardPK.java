@@ -1,4 +1,4 @@
-package sparta.a08.trello.Card.entity;
+package sparta.a08.trello.card.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

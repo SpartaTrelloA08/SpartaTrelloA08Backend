@@ -1,4 +1,4 @@
-package sparta.a08.trello.Card.entity;
+package sparta.a08.trello.card.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sparta.a08.trello.board.entity.enums.BoardColor;
+import sparta.a08.trello.card.entity.enums.CardColor;
 import sparta.a08.trello.columns.entity.Columns;
 import sparta.a08.trello.comment.entity.Comment;
 import sparta.a08.trello.common.BaseEntity;
@@ -38,19 +39,22 @@ public class Card extends BaseEntity {
     private LocalDateTime dueDate;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "Column_id")
+    @JoinColumn(name = "column_id")
     private Columns columns;
 
     @OneToMany(mappedBy = "card")
     private List<Comment> comments;
 
     @Builder
-    public Card(String title, String content, Long position ,String dueDate) {
+    public Card(Columns columns, String title, Long position) {
+        this.columns = columns;
+
         this.title = title;
-        this.content = content;
-        this.filename = BoardColor.BLACK.getUrl();
         this.position = position;
-        this.dueDate=LocalDateTime.parse(dueDate);
+        this.content = "";
+
+        //default card color
+        this.filename = CardColor.BLACK.getUrl();
     }
 
     public Card update(String title, String content,String dueDate) {

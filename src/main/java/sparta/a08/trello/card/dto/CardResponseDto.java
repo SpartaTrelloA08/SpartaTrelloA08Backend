@@ -1,10 +1,10 @@
-package sparta.a08.trello.Card.dto;
+package sparta.a08.trello.card.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sparta.a08.trello.Card.entity.Card;
+import sparta.a08.trello.card.entity.Card;
 
 @Getter
 @Setter

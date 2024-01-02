@@ -1,53 +1,67 @@
-package sparta.a08.trello.Card.service;
+package sparta.a08.trello.card.service;
 
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import sparta.a08.trello.Card.dto.CardColorRequest;
-import sparta.a08.trello.Card.dto.CardColorResponse;
-import sparta.a08.trello.Card.dto.CardRequestDto;
-import sparta.a08.trello.Card.dto.CardResponseDto;
-import sparta.a08.trello.Card.entity.Card;
-import sparta.a08.trello.Card.entity.UserCard;
-import sparta.a08.trello.Card.entity.enums.CardColor;
-import sparta.a08.trello.Card.repository.CardRepository;
-import jakarta.transaction.Transactional;
-import sparta.a08.trello.Card.repository.UserCardRepository;
-import sparta.a08.trello.board.entity.enums.BoardColor;
+import sparta.a08.trello.board.entity.Board;
+import sparta.a08.trello.board.entity.UserBoard;
+import sparta.a08.trello.board.entity.UserBoardPK;
+import sparta.a08.trello.board.entity.enums.UserBoardRole;
+import sparta.a08.trello.board.repository.BoardRepository;
+import sparta.a08.trello.board.repository.UserBoardRepository;
+import sparta.a08.trello.card.dto.CardColorRequest;
+import sparta.a08.trello.card.dto.CardColorResponse;
+import sparta.a08.trello.card.dto.CardRequestDto;
+import sparta.a08.trello.card.dto.CardResponseDto;
+import sparta.a08.trello.card.entity.Card;
+import sparta.a08.trello.card.entity.UserCard;
+import sparta.a08.trello.card.entity.enums.CardColor;
+import sparta.a08.trello.card.repository.CardRepository;
+import sparta.a08.trello.card.repository.UserCardRepository;
 import sparta.a08.trello.columns.dto.CommonResponseDto;
 import sparta.a08.trello.columns.dto.PositionRequestDto;
+import sparta.a08.trello.columns.entity.Columns;
+import sparta.a08.trello.columns.repository.ColumnsRepository;
 import sparta.a08.trello.common.cloud.s3.S3Const;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
 import sparta.a08.trello.user.entity.User;
 import sparta.a08.trello.user.repository.UserRepository;
 import sparta.a08.trello.common.cloud.s3.S3Util;
+
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CardService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
+    private final BoardRepository boardRepository;
+    private final UserBoardRepository userBoardRepository;
+    private final ColumnsRepository columnsRepository;
+
     private final S3Util s3Util;
 
 
     @Transactional
-    public CardResponseDto createCard(User user,CardRequestDto cardRequestDto) {
+    public CardResponseDto createCard(User user,CardRequestDto cardRequestDto, Long boardId, Long columnId) {
+        Columns findColumns = getColumn(user, boardId, columnId);
+
         Card card = Card.builder()
+                .columns(findColumns)
                 .title(cardRequestDto.getTitle())
-                .content(cardRequestDto.getContent())
                 .position(cardRequestDto.getPosition())
-                .dueDate(cardRequestDto.getDueDate())
                 .build();
 
         cardRepository.save(card);
-        createUserCard(user,card);
 
-        return CardResponseDto.fromEntity(card,s3Util.getImageURL(S3Const.S3_DIR_BOARD, card.getFilename()));
+        return CardResponseDto.fromEntity(card, s3Util.getImageURL(S3Const.S3_DIR_CARD, card.getFilename()));
     }
 
     @Transactional
@@ -137,8 +151,6 @@ public class CardService {
         return new CardColorResponse(s3Util.getImageURL(S3Const.S3_DIR_CARD, card.getFilename()));
     }
 
-
-
     @Transactional
     public void createUserCard(Long cardId, String email) {
         Card Card = cardRepository.findById(cardId)
@@ -167,5 +179,27 @@ public class CardService {
         }
 
         return false;
+    }
+
+    private Columns getColumn(User user, Long boardId, Long columnId) {
+        Board findBoard = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION, 404));
+
+        //card 생성을 요청하는 user가 board에 속해있는지 확인
+        Optional<UserBoard> findUserBoard = userBoardRepository.findById(UserBoardPK.builder()
+                .userId(user.getId())
+                .boardId(findBoard.getId())
+                .build()
+        );
+
+        if(findUserBoard.isEmpty()) {
+            throw new CustomException(CustomErrorCode.NOT_ALLOWED_TO_UPDATE_BOARD_EXCEPTION, 403);
+        }
+
+        //column이 board에 속해있는지도 확인해야하는지 체크하는 로직 필요
+        //시간 없으니 일단..
+
+        return columnsRepository.findById(columnId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.COLUMN_NOT_FOUND_EXCEPTION, 404));
     }
 }

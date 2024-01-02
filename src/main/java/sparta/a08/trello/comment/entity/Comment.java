@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sparta.a08.trello.Card.entity.Card;
+import sparta.a08.trello.card.entity.Card;
 import sparta.a08.trello.common.BaseEntity;
 import sparta.a08.trello.user.entity.User;
 

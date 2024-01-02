@@ -1,4 +1,4 @@
-package sparta.a08.trello.Card.entity.enums;
+package sparta.a08.trello.card.entity.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

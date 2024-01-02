@@ -1,4 +1,4 @@
-package sparta.a08.trello.Card.dto;
+package sparta.a08.trello.card.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

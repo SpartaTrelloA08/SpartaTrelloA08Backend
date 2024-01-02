@@ -1,4 +1,4 @@
-package sparta.a08.trello.Card.controller;
+package sparta.a08.trello.card.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,17 +8,17 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import sparta.a08.trello.Card.dto.CardColorRequest;
-import sparta.a08.trello.Card.dto.CardColorResponse;
-import sparta.a08.trello.Card.dto.CardRequestDto;
-import sparta.a08.trello.Card.dto.CardResponseDto;
-import sparta.a08.trello.Card.service.CardService;
+import sparta.a08.trello.card.dto.CardColorRequest;
+import sparta.a08.trello.card.dto.CardColorResponse;
+import sparta.a08.trello.card.dto.CardRequestDto;
+import sparta.a08.trello.card.dto.CardResponseDto;
+import sparta.a08.trello.card.service.CardService;
 import sparta.a08.trello.columns.dto.CommonResponseDto;
 import sparta.a08.trello.columns.dto.PositionRequestDto;
 import sparta.a08.trello.common.security.UserDetailsImpl;
 
 @RestController
-@RequestMapping("/api/boards/{boardsId}/columns/{columnId}/card")
+@RequestMapping("/api/boards/{boardId}/columns/{columnId}/card")
 @RequiredArgsConstructor
 public class CardController {
 
@@ -28,9 +28,11 @@ public class CardController {
     @PostMapping("")
     public ResponseEntity<CardResponseDto> createCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestBody CardRequestDto cardRequestDto
+            @Valid @RequestBody CardRequestDto cardRequestDto,
+            @PathVariable("boardId") Long boardId,
+            @PathVariable("columnId") Long columnId
     ) {
-        CardResponseDto createdCard = cardService.createCard(userDetails.getUser(), cardRequestDto);
+        CardResponseDto createdCard = cardService.createCard(userDetails.getUser(), cardRequestDto, boardId, columnId);
         return new ResponseEntity<>(createdCard, HttpStatus.CREATED);
     }
 
