@@ -133,7 +133,7 @@ public class CardService {
             case "service" -> card.setFilename(request.getFilename());
             case "custom" -> {
                 MultipartFile file = request.getFile();
-                if (!isDefaultColor(file.getOriginalFilename())) {
+                if (!isDefaultColor(card.getFilename())) {
 
                     s3Util.deleteImage(S3Const.S3_DIR_CARD, card.getFilename());
                 }
