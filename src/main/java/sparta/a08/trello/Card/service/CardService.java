@@ -20,6 +20,8 @@ import sparta.a08.trello.Card.repository.UserCardRepository;
 import sparta.a08.trello.board.entity.enums.BoardColor;
 import sparta.a08.trello.columns.dto.CommonResponseDto;
 import sparta.a08.trello.columns.dto.PositionRequestDto;
+import sparta.a08.trello.columns.entity.Columns;
+import sparta.a08.trello.columns.repository.ColumnsRepository;
 import sparta.a08.trello.common.cloud.s3.S3Const;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
@@ -32,15 +34,21 @@ public class CardService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
+    private final ColumnsRepository columnsRepository;
     private final S3Util s3Util;
 
 
     @Transactional
-    public CardResponseDto createCard(User user,CardRequestDto cardRequestDto) {
+    public CardResponseDto createCard(Long columnId,User user,CardRequestDto cardRequestDto) {
+        Columns column = columnsRepository.findById(columnId)
+                .orElseThrow(()-> new CustomException(CustomErrorCode.COLUMN_NOT_FOUND_EXCEPTION,404));
+        Long maxPosition = cardRepository.findMaxPosition();
+        Long position=(maxPosition!=null) ? maxPosition : 1;
         Card card = Card.builder()
                 .title(cardRequestDto.getTitle())
                 .content(cardRequestDto.getContent())
-                .position(cardRequestDto.getPosition())
+                .column(column)
+                .position(position)
                 .dueDate(cardRequestDto.getDueDate())
                 .build();
 
@@ -78,6 +86,7 @@ public class CardService {
 
     @Transactional
     public CommonResponseDto deleteCard(Long cardId) {
+        userCardRepository.deleteByCardId(cardId);
         cardRepository.deleteById(cardId);
         return new CommonResponseDto("카드 삭제 완료", 200);
     }

@@ -1,5 +1,6 @@
 package sparta.a08.trello.Card.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,10 +11,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import sparta.a08.trello.user.entity.User;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserCard {
 
@@ -39,5 +42,4 @@ public class UserCard {
                 .cardId(card.getId())
                 .build();
     }
-
 }

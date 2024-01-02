@@ -2,6 +2,7 @@ package sparta.a08.trello.Card.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,7 +38,7 @@ public class Card extends BaseEntity {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Column_id")
     private Columns columns;
 
@@ -45,12 +46,14 @@ public class Card extends BaseEntity {
     private List<Comment> comments;
 
     @Builder
-    public Card(String title, String content, Long position ,String dueDate) {
+    public Card(String title, String content, Long position ,String dueDate,Columns column) {
         this.title = title;
         this.content = content;
         this.filename = BoardColor.BLACK.getUrl();
-        this.position = position;
+        this.position = position+1;
+        this.columns=column;
         this.dueDate=LocalDateTime.parse(dueDate);
+        this.comments=new ArrayList<>();
     }
 
     public Card update(String title, String content,String dueDate) {

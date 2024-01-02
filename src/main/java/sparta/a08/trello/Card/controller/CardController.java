@@ -27,10 +27,11 @@ public class CardController {
 
     @PostMapping("")
     public ResponseEntity<CardResponseDto> createCard(
+            @PathVariable(name = "columnId") Long columnId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody CardRequestDto cardRequestDto
     ) {
-        CardResponseDto createdCard = cardService.createCard(userDetails.getUser(), cardRequestDto);
+        CardResponseDto createdCard = cardService.createCard(columnId,userDetails.getUser(), cardRequestDto);
         return new ResponseEntity<>(createdCard, HttpStatus.CREATED);
     }
 
@@ -77,7 +78,7 @@ public class CardController {
         return new ResponseEntity<>(deletionResult, HttpStatus.OK);
     }
 
-    @PutMapping("/{cardId}/move")
+    @PatchMapping("/{cardId}/move")
     public ResponseEntity<CommonResponseDto> moveCardPosition(
             @PathVariable(name = "cardId") Long cardId,
             @RequestBody PositionRequestDto positionRequestDto) {
