@@ -47,25 +47,34 @@ public class CardController {
 
     @GetMapping("/{cardId}")
     public ResponseEntity<CardResponseDto> getCardById(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable(name = "boardId") Long boardId,
+            @PathVariable(name = "columnId") Long columnId,
             @PathVariable(name = "cardId") Long cardId
     ) {
-        CardResponseDto cardById = cardService.getCardById(cardId);
+        CardResponseDto cardById = cardService.getCardById(userDetails.getUser(), boardId, columnId, cardId);
         return new ResponseEntity<>(cardById, HttpStatus.OK);
     }
 
     @PatchMapping("/{cardId}")
     public ResponseEntity<CardResponseDto> updateCard(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable(name = "boardId") Long boardId,
+            @PathVariable(name = "columnId") Long columnId,
             @PathVariable(name = "cardId") Long cardId,
             @RequestBody CardRequestDto cardRequestDto
     ) {
-        CardResponseDto updatedCard = cardService.updateCard(cardId, cardRequestDto);
+        CardResponseDto updatedCard = cardService.updateCard(userDetails.getUser(), boardId, columnId, cardId, cardRequestDto);
         return new ResponseEntity<>(updatedCard, HttpStatus.OK);
     }
 
     @PutMapping("/{cardId}/color")
     public ResponseEntity<CardColorResponse> updateCardColor(
-            @ModelAttribute CardColorRequest colorRequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable(name = "boardId") Long boardId,
+            @PathVariable(name = "columnId") Long columnId,
             @PathVariable(name ="cardId") Long cardId,
+            @ModelAttribute CardColorRequest colorRequest,
             @RequestParam(name="type") String type
 
     ){

@@ -8,10 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CardRequestDto {
-
     private String title;
     private String content;
     private Long position;
-    private String dueDate;
-
 }

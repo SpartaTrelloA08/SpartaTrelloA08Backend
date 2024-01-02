@@ -48,7 +48,6 @@ public class CardService {
 
     private final S3Util s3Util;
 
-
     @Transactional
     public CardResponseDto createCard(User user,CardRequestDto cardRequestDto, Long boardId, Long columnId) {
         checkAuthority(user, boardId);
@@ -77,22 +76,25 @@ public class CardService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public CardResponseDto getCardById(Long cardId) {
+    public CardResponseDto getCardById(User user, Long boardId, Long columnId, Long cardId) {
+        checkAuthority(user, boardId);
+
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.CARD_NOT_FOUND_EXCEPTION, 404));
 
-        return CardResponseDto.fromEntity(card, s3Util.getImageURL(S3Const.S3_DIR_BOARD, card.getFilename()));
+        return CardResponseDto.fromEntity(card, s3Util.getImageURL(S3Const.S3_DIR_CARD, card.getFilename()));
     }
 
     @Transactional
-    public CardResponseDto updateCard(Long cardId, CardRequestDto cardRequestDto) {
+    public CardResponseDto updateCard(User user, Long boardId, Long columnId, Long cardId, CardRequestDto cardRequestDto) {
+        checkAuthority(user, boardId);
+
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.CARD_NOT_FOUND_EXCEPTION, 404));
 
-        card.update(cardRequestDto.getTitle(), cardRequestDto.getContent(), cardRequestDto.getDueDate());
+        card.update(cardRequestDto.getTitle(), cardRequestDto.getContent());
 
-        return CardResponseDto.fromEntity(card, s3Util.getImageURL(S3Const.S3_DIR_BOARD, card.getFilename()));
+        return CardResponseDto.fromEntity(card, s3Util.getImageURL(S3Const.S3_DIR_CARD, card.getFilename()));
     }
 
     @Transactional
@@ -143,8 +145,7 @@ public class CardService {
             case "service" -> card.setFilename(request.getFilename());
             case "custom" -> {
                 MultipartFile file = request.getFile();
-                if (!isDefaultColor(file.getOriginalFilename())) {
-
+                if (!isDefaultColor(card.getFilename())) {
                     s3Util.deleteImage(S3Const.S3_DIR_CARD, card.getFilename());
                 }
 
@@ -165,8 +166,6 @@ public class CardService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_MEMBER_EXCEPTION, 404));
 
         createUserCard(User,Card);
-
-
     }
 
     private void createUserCard(User user, Card card) {

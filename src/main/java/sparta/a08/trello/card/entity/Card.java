@@ -57,10 +57,10 @@ public class Card extends BaseEntity {
         this.filename = CardColor.BLACK.getUrl();
     }
 
-    public Card update(String title, String content,String dueDate) {
+    public Card update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.dueDate=LocalDateTime.parse(dueDate);
+
         return this;
     }
 
