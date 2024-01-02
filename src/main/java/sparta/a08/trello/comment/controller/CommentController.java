@@ -3,14 +3,17 @@ package sparta.a08.trello.comment.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import sparta.a08.trello.columns.dto.CommonResponseDto;
 import sparta.a08.trello.comment.dto.CommentRequestDto;
 import sparta.a08.trello.comment.dto.CommentResponseDto;
 import sparta.a08.trello.comment.service.CommentService;
+import sparta.a08.trello.common.security.UserDetailsImpl;
 
 @RestController
-@RequestMapping("/api/cards/{cardId}/comments")
+@RequestMapping("/api/boards/{boardsId}/columns/{columnId}/cards/{cardId}/comments")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -24,9 +27,12 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommonResponseDto> createComment(
-            @RequestBody CommentRequestDto commentRequestDto
+            @RequestBody CommentRequestDto commentRequestDto,
+            @PathVariable(name = "cardId") Long cardId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+
     ) {
-        CommonResponseDto response = commentService.createComment(commentRequestDto);
+        CommonResponseDto response = commentService.createComment(cardId,userDetails,commentRequestDto);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

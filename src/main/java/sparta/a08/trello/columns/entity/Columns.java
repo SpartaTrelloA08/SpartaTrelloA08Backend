@@ -2,6 +2,7 @@ package sparta.a08.trello.columns.entity;
 
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +28,7 @@ public class Columns extends BaseEntity {
     @OneToMany(mappedBy = "columns")
     private List<Card> cards;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
@@ -35,15 +36,15 @@ public class Columns extends BaseEntity {
     private Long position;
 
     @Builder
-    public Columns(String title, List<Card> cards, Board board, Long position) {
+    public Columns(String title, Board board, Long position) {
         this.title = title;
-        this.cards = cards;
         this.board = board;
-        this.position = position;
+        this.position = position+1;
+        this.cards = new ArrayList<>();
     }
 
-    public void updateColumn(ColumnRequestDto columnRequestDto) {
-        this.title = columnRequestDto.getTitle();
+    public void updateColumn(String newTitle) {
+        this.title = newTitle;
     }
 
     public void setPosition(Long position){

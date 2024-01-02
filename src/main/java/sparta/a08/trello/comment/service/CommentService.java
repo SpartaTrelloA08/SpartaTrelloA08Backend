@@ -14,6 +14,7 @@ import sparta.a08.trello.comment.entity.Comment;
 import sparta.a08.trello.comment.repository.CommentRepository;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
+import sparta.a08.trello.common.security.UserDetailsImpl;
 import sparta.a08.trello.user.entity.User;
 import sparta.a08.trello.user.repository.UserRepository;
 
@@ -24,15 +25,13 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CardRepository cardRepository;
-    private final UserRepository userRepository;
 
     @Transactional
-    public CommonResponseDto createComment(CommentRequestDto commentRequestDto) {
-        Card card = cardRepository.findById(commentRequestDto.getCardId())
+    public CommonResponseDto createComment(Long cardId, UserDetailsImpl userDetails,CommentRequestDto commentRequestDto) {
+        Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.CARD_NOT_FOUND_EXCEPTION, 404));
 
-        User user = userRepository.findById(commentRequestDto.getUserId())
-                .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND_EXCEPTION, 404));
+        User user =userDetails.getUser();
 
         Comment comment = Comment.builder()
                 .content(commentRequestDto.getContent())

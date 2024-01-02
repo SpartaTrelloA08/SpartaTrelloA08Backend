@@ -8,7 +8,5 @@ import lombok.Setter;
 public class CommentRequestDto {
 
     private String content;
-    private Long cardId;
-    private Long userId;
 
 }
