@@ -1,13 +1,11 @@
 package sparta.a08.trello.columns.service;
 
-import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import sparta.a08.trello.board.entity.Board;
+import sparta.a08.trello.board.repository.BoardRepository;
 import sparta.a08.trello.columns.dto.ColumnRequestDto;
 import sparta.a08.trello.columns.dto.ColumnResponseDto;
 import sparta.a08.trello.columns.dto.CommonResponseDto;
@@ -17,28 +15,40 @@ import sparta.a08.trello.columns.repository.ColumnsRepository;
 import sparta.a08.trello.common.exception.CustomErrorCode;
 import sparta.a08.trello.common.exception.CustomException;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j(topic = "ColumnService")
+@Transactional(readOnly = true)
 public class ColumnService {
 
     private final ColumnsRepository columnRepository;
+    private final BoardRepository boardRepository;
+    @Transactional
+    public CommonResponseDto createColumn(ColumnRequestDto columnRequestDto, Long boardId) {
+        Board findBoard = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION, 404));
+
+        Long maxPosition = columnRepository.findCountByBoardId(boardId).orElse(0L);
+
+        Columns column = Columns.builder()
+                .board(findBoard)
+                .title(columnRequestDto.getTitle())
+                .position(maxPosition + 1)
+                .build();
+
+        columnRepository.save(column);
+        return new CommonResponseDto("컬럼 생성 완료", 200);
+    }
 
     public List<ColumnResponseDto> getAllColumns() {
         List<Columns> columnsList = columnRepository.findAll();
         return columnsList.stream()
                 .map(ColumnResponseDto::fromEntity)
                 .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public CommonResponseDto createColumn(ColumnRequestDto columnRequestDto) {
-        Columns column = Columns.builder()
-                .title(columnRequestDto.getTitle())
-                .position(columnRepository.findMaxPosition())
-                .build();
-
-        columnRepository.save(column);
-        return new CommonResponseDto("컬럼 생성 완료", 200);
     }
 
     @Transactional
@@ -92,3 +102,4 @@ public class ColumnService {
 
 
 }
+

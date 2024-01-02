@@ -11,7 +11,7 @@ import sparta.a08.trello.columns.dto.PositionRequestDto;
 import sparta.a08.trello.columns.service.ColumnService;
 
 @RestController
-@RequestMapping("/api/board/{board_id}/columns")
+@RequestMapping("/api/board/{boardId}/columns")
 @RequiredArgsConstructor
 public class ColumnsController {
 
@@ -25,9 +25,10 @@ public class ColumnsController {
 
     @PostMapping
     public ResponseEntity<CommonResponseDto> createColumn(
-            @RequestBody ColumnRequestDto columnRequestDto
+            @RequestBody ColumnRequestDto columnRequestDto,
+            @PathVariable(name = "boardId") Long boardId
     ) {
-        CommonResponseDto response = columnService.createColumn(columnRequestDto);
+        CommonResponseDto response = columnService.createColumn(columnRequestDto, boardId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

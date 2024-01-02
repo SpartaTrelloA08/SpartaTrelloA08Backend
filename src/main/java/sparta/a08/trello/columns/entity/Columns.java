@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sparta.a08.trello.Card.entity.Card;
+import sparta.a08.trello.card.entity.Card;
 import sparta.a08.trello.board.entity.Board;
 import sparta.a08.trello.columns.dto.ColumnRequestDto;
 import sparta.a08.trello.common.BaseEntity;
