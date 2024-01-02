@@ -63,4 +63,9 @@ public class Card extends BaseEntity {
     public void setPosition(Long position){
         this.position = position;
     }
+
+    public String setFilename(String filename) {
+        this.filename = filename;
+        return this.filename;
+    }
 }
