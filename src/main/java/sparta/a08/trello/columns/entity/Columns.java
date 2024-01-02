@@ -6,8 +6,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sparta.a08.trello.card.Card;
+import sparta.a08.trello.Card.entity.Card;
 import sparta.a08.trello.board.entity.Board;
 import sparta.a08.trello.columns.dto.ColumnRequestDto;
 import sparta.a08.trello.common.BaseEntity;
@@ -15,7 +14,6 @@ import sparta.a08.trello.common.BaseEntity;
 @Entity
 @NoArgsConstructor
 @Getter
-@Setter
 public class Columns extends BaseEntity {
 
     @Id
@@ -26,10 +24,10 @@ public class Columns extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "columns", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "columns")
     private List<Card> cards;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
@@ -46,5 +44,9 @@ public class Columns extends BaseEntity {
 
     public void updateColumn(ColumnRequestDto columnRequestDto) {
         this.title = columnRequestDto.getTitle();
+    }
+
+    public void setPosition(Long position){
+        this.position=position;
     }
 }

@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sparta.a08.trello.card.Card;
+import sparta.a08.trello.Card.entity.Card;
 import sparta.a08.trello.common.BaseEntity;
 import sparta.a08.trello.user.entity.User;
 
@@ -21,7 +21,7 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
     @JoinColumn(name = "card_id", nullable = false)
     private Card card;
 
