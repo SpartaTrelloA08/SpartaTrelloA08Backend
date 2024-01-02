@@ -20,7 +20,7 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
     public List<User> searchUser(UserSearchCond cond) {
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(QUser.user.email.like(cond.getKeyword()));
+        builder.and(QUser.user.email.like("%" + cond.getKeyword() + "%"));
 
         JPAQueryFactory query = new JPAQueryFactory(em);
 
