@@ -51,7 +51,10 @@ public class CardService {
 
     @Transactional
     public CardResponseDto createCard(User user,CardRequestDto cardRequestDto, Long boardId, Long columnId) {
-        Columns findColumns = getColumn(user, boardId, columnId);
+        checkAuthority(user, boardId);
+
+        Columns findColumns = columnsRepository.findById(columnId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.COLUMN_NOT_FOUND_EXCEPTION, 404));
 
         Card card = Card.builder()
                 .columns(findColumns)
@@ -64,11 +67,13 @@ public class CardService {
         return CardResponseDto.fromEntity(card, s3Util.getImageURL(S3Const.S3_DIR_CARD, card.getFilename()));
     }
 
-    @Transactional
-    public List<CardResponseDto> getAllCards() {
-        List<Card> cards = cardRepository.findAll();
+    public List<CardResponseDto> getAllCards(User user, Long boardId, Long columnId) {
+        checkAuthority(user, boardId);
+
+        List<Card> cards = cardRepository.findAllByColumns_IdOrderByPositionAsc(columnId);
+
         return cards.stream()
-                .map(card -> CardResponseDto.fromEntity(card, s3Util.getImageURL(S3Const.S3_DIR_BOARD, card.getFilename())))
+                .map(card -> CardResponseDto.fromEntity(card, s3Util.getImageURL(S3Const.S3_DIR_CARD, card.getFilename())))
                 .collect(Collectors.toList());
     }
 
@@ -181,25 +186,16 @@ public class CardService {
         return false;
     }
 
-    private Columns getColumn(User user, Long boardId, Long columnId) {
+    private void checkAuthority(User user, Long boardId) {
+        //1. Board 존재하는지 확인
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION, 404));
 
-        //card 생성을 요청하는 user가 board에 속해있는지 확인
-        Optional<UserBoard> findUserBoard = userBoardRepository.findById(UserBoardPK.builder()
+        //2. 요청 User가 Board에 속해있는지 확인
+        UserBoard findUserBoard = userBoardRepository.findById(UserBoardPK.builder()
                 .userId(user.getId())
-                .boardId(findBoard.getId())
+                .boardId(boardId)
                 .build()
-        );
-
-        if(findUserBoard.isEmpty()) {
-            throw new CustomException(CustomErrorCode.NOT_ALLOWED_TO_UPDATE_BOARD_EXCEPTION, 403);
-        }
-
-        //column이 board에 속해있는지도 확인해야하는지 체크하는 로직 필요
-        //시간 없으니 일단..
-
-        return columnsRepository.findById(columnId)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.COLUMN_NOT_FOUND_EXCEPTION, 404));
+        ).orElseThrow(() -> new CustomException(CustomErrorCode.NOT_ALLOWED_TO_UPDATE_BOARD_EXCEPTION, 403));
     }
 }

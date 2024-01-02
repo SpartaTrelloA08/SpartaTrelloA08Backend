@@ -24,7 +24,6 @@ public class CardController {
 
     private final CardService cardService;
 
-
     @PostMapping("")
     public ResponseEntity<CardResponseDto> createCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -36,10 +35,13 @@ public class CardController {
         return new ResponseEntity<>(createdCard, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<CardResponseDto>> getAllCards()
-    {
-        List<CardResponseDto> Cards = cardService.getAllCards();
+    @GetMapping("")
+    public ResponseEntity<List<CardResponseDto>> getAllCards(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable(name = "boardId") Long boardId,
+            @PathVariable(name = "columnId") Long columnId
+    ) {
+        List<CardResponseDto> Cards = cardService.getAllCards(userDetails.getUser(), boardId, columnId);
         return new ResponseEntity<>(Cards, HttpStatus.OK);
     }
 
