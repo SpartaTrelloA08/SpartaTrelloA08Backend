@@ -1,5 +1,6 @@
 package sparta.a08.trello.columns.service;
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import sparta.a08.trello.board.entity.Board;
+import sparta.a08.trello.board.repository.BoardRepository;
 import sparta.a08.trello.columns.dto.ColumnRequestDto;
 import sparta.a08.trello.columns.dto.ColumnResponseDto;
 import sparta.a08.trello.columns.dto.CommonResponseDto;
@@ -22,6 +25,8 @@ import sparta.a08.trello.common.exception.CustomException;
 public class ColumnService {
 
     private final ColumnsRepository columnRepository;
+    private final BoardRepository boardRepository;
+
 
     public List<ColumnResponseDto> getAllColumns() {
         List<Columns> columnsList = columnRepository.findAll();
@@ -31,10 +36,16 @@ public class ColumnService {
     }
 
     @Transactional
-    public CommonResponseDto createColumn(ColumnRequestDto columnRequestDto) {
+    public CommonResponseDto createColumn(Long boardId,ColumnRequestDto columnRequestDto) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(()->new CustomException(CustomErrorCode.BOARD_NOT_FOUND_EXCEPTION,404));
+        Long maxPosition = columnRepository.findMaxPosition();
+        Long position = (maxPosition != null) ? maxPosition : 1;
+
         Columns column = Columns.builder()
                 .title(columnRequestDto.getTitle())
-                .position(columnRepository.findMaxPosition())
+                .position(position)
+                .board(board)
                 .build();
 
         columnRepository.save(column);
@@ -42,24 +53,25 @@ public class ColumnService {
     }
 
     @Transactional
-    public CommonResponseDto updateColumn(Long id, ColumnRequestDto requestDto) {
-        Columns column = columnRepository.findById(id)
+    public CommonResponseDto updateColumn(Long columnId, ColumnRequestDto requestDto) {
+        Columns column = columnRepository.findById(columnId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.COLUMN_NOT_FOUND_EXCEPTION, 404));
+        String newTitle=requestDto.getTitle();
 
-        column.updateColumn(requestDto);
+        column.updateColumn(newTitle);
 
         return new CommonResponseDto("컬럼 수정 완료", 200);
     }
 
     @Transactional
-    public CommonResponseDto deleteColumn(Long id) {
-        columnRepository.deleteById(id);
+    public CommonResponseDto deleteColumn(Long columnId) {
+        columnRepository.deleteById(columnId);
         return new CommonResponseDto("컬럼 삭제 완료", 200);
     }
 
     @Transactional
-    public CommonResponseDto movePosition(Long id, PositionRequestDto positionRequestDto) {
-        Columns column = columnRepository.findById(id)
+    public CommonResponseDto movePosition(Long columnId, PositionRequestDto positionRequestDto) {
+        Columns column = columnRepository.findById(columnId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.COLUMN_NOT_FOUND_EXCEPTION, 404));
 
         Long currentPosition = column.getPosition();
